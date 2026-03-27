@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fantasy MLB Team League 2026</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚾</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@700;800;900&display=swap" rel="stylesheet">
+<script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+:root{--bg:#F7F6F3;--card:#fff;--cb:#E5E5E5;--hdr:#1B2A4A;--G:#C9A84C;--LG:#FFF8E7;--LN:#E8EDF4;--GR:#2E7D32;--RD:#C62828;--GY:#6B7280;--MG:#D1D5DB;--ra:#FAFAFA;--ib:#fff;--ibd:#DDD;--tx:#1B2A4A}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Libre Franklin',sans-serif;background:var(--bg);color:var(--tx)}
+input:focus{outline:2px solid var(--G)}button{cursor:pointer}button:active{transform:scale(.97)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes celebBounce{0%{transform:scale(.3);opacity:0}50%{transform:scale(1.05)}100%{transform:scale(1);opacity:1}}
+@keyframes headerShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+@keyframes goldGlow{0%,100%{box-shadow:0 0 8px rgba(201,168,76,0.3)}50%{box-shadow:0 0 20px rgba(201,168,76,0.5)}}
+@keyframes tickerScroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.glass{background:rgba(255,255,255,0.85);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.4)}
+.gold-row{animation:goldGlow 3s ease-in-out infinite;border-radius:8px}
+.ticker-wrap{overflow:hidden;width:100%;background:#0d1b33;padding:6px 0}
+.ticker-track{display:flex;gap:32px;white-space:nowrap;animation:tickerScroll 25s linear infinite;width:max-content}
+.mu{color:#2E7D32;font-size:10px;font-weight:800}.md{color:#C62828;font-size:10px;font-weight:800}.ms{color:var(--GY);font-size:10px}
+@media(max-width:600px){h1{font-size:22px!important}.hdr{padding:16px 16px 12px!important}.hdr-row{flex-direction:column!important;align-items:flex-start!important;gap:8px}.tabs-row{overflow-x:auto;-webkit-overflow-scrolling:touch}.tabs-row button{padding:8px 10px!important;font-size:9px!important;white-space:nowrap}.prize-row{flex-direction:column!important}.st-table th,.st-table td{padding:8px 4px!important;font-size:10px!important}.roster-grid{grid-template-columns:1fr!important}.draft-mgr-grid{grid-template-columns:repeat(2,1fr)!important}.draft-layout{flex-direction:column!important}.draft-sidebar{width:100%!important;min-width:0!important;position:relative!important;top:0!important}.h2h-wrap{grid-template-columns:1fr!important}.future-grid{grid-template-columns:repeat(2,1fr)!important}.division-grid{grid-template-columns:1fr!important}.ticker-track{animation-duration:15s}.h2h-wrap>div:nth-child(2){flex-direction:row!important;padding:8px 0!important}.mile-row{overflow-x:auto;-webkit-overflow-scrolling:touch;justify-content:flex-start!important;gap:16px!important;padding-bottom:8px}.mile-item{min-width:70px!important}.recap-row{flex-direction:column!important}.proj-grid{grid-template-columns:1fr!important}.wst-grid{grid-template-columns:1fr!important}.badge-grid{grid-template-columns:1fr!important}.prev-table{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch}.mid-table{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch}.celeb-pad{padding:24px 20px!important}.celeb-title{font-size:22px!important}.celeb-gif{max-width:240px!important}}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+firebase.initializeApp({apiKey:"AIzaSyC8UvEYET3uXzDNHBuOz_PoQj-pLUFEHDs",authDomain:"mlbtl26.firebaseapp.com",databaseURL:"https://mlbtl26-default-rtdb.firebaseio.com",projectId:"mlbtl26",storageBucket:"mlbtl26.firebasestorage.app",messagingSenderId:"609988607987",appId:"1:609988607987:web:7aaf6f783aad1392995c86"});
+var DB=firebase.database(),GAME=DB.ref("game2");
+var ALL_TEAMS=["Angels","Astros","Athletics","Blue Jays","Braves","Brewers","Cardinals","Cubs","Diamondbacks","Dodgers","Giants","Guardians","Mariners","Marlins","Mets","Nationals","Orioles","Padres","Phillies","Pirates","Rangers","Rays","Red Sox","Reds","Rockies","Royals","Tigers","Twins","White Sox","Yankees"];
+var MNAMES=["Andrew","Ben","Stranger","Rip"];
+var MGR_COLORS={"Andrew":"#2563EB","Ben":"#DC2626","Stranger":"#059669","Rip":"#7C3AED"};
+var TEAM_COLORS={"Angels":"#BA0021","Astros":"#EB6E1F","Athletics":"#003831","Blue Jays":"#134A8E","Braves":"#CE1141","Brewers":"#12284B","Cardinals":"#C41E3A","Cubs":"#0E3386","Diamondbacks":"#A71930","Dodgers":"#005A9C","Giants":"#FD5A1E","Guardians":"#00385D","Mariners":"#0C2C56","Marlins":"#00A3E0","Mets":"#002D72","Nationals":"#AB0003","Orioles":"#DF4601","Padres":"#2F241D","Phillies":"#E81828","Pirates":"#FDB827","Rangers":"#003278","Rays":"#092C5C","Red Sox":"#BD3039","Reds":"#C6011F","Rockies":"#333366","Royals":"#004687","Tigers":"#0C2340","Twins":"#002B5C","White Sox":"#27251F","Yankees":"#003087"};
+var LOGO_ABBR={"Angels":"laa","Astros":"hou","Athletics":"oak","Blue Jays":"tor","Braves":"atl","Brewers":"mil","Cardinals":"stl","Cubs":"chc","Diamondbacks":"ari","Dodgers":"lad","Giants":"sf","Guardians":"cle","Mariners":"sea","Marlins":"mia","Mets":"nym","Nationals":"wsh","Orioles":"bal","Padres":"sd","Phillies":"phi","Pirates":"pit","Rangers":"tex","Rays":"tb","Red Sox":"bos","Reds":"cin","Rockies":"col","Royals":"kc","Tigers":"det","Twins":"min","White Sox":"chw","Yankees":"nyy"};
+var LOGOS={};ALL_TEAMS.forEach(function(t){LOGOS[t]="https://a.espncdn.com/i/teamlogos/mlb/500/"+LOGO_ABBR[t]+".png"});
+var GIFS={"Angels":"https://media.giphy.com/media/l41YtBXZtrX5fAGFG/giphy.gif","Astros":"https://media.giphy.com/media/3oKIPjHCmuXqdSupHi/giphy.gif","Athletics":"https://media.giphy.com/media/l3q2LH45XElELRzRm/giphy.gif","Blue Jays":"https://media.giphy.com/media/3ohzdIuqJoo8QdKlnW/giphy.gif","Braves":"https://media.giphy.com/media/l3q2Z6S6n38zjPswo/giphy.gif","Brewers":"https://media.giphy.com/media/l0HlBO7eyXzSZkJri/giphy.gif","Cardinals":"https://media.giphy.com/media/3ohzdYJK1lnOykJFLe/giphy.gif","Cubs":"https://media.giphy.com/media/l0MYGb1LuZ3n7dRnO/giphy.gif","Diamondbacks":"https://media.giphy.com/media/3o7aCTfyhYawMw0YBa/giphy.gif","Dodgers":"https://media.giphy.com/media/l3q2LH45XElELRzRm/giphy.gif","Giants":"https://media.giphy.com/media/3ohzdIuqJoo8QdKlnW/giphy.gif","Guardians":"https://media.giphy.com/media/l0HlvFUHALbTnhPG0/giphy.gif","Mariners":"https://media.giphy.com/media/l3q2Z6S6n38zjPswo/giphy.gif","Marlins":"https://media.giphy.com/media/l0HlBO7eyXzSZkJri/giphy.gif","Mets":"https://media.giphy.com/media/3ohzdYJK1lnOykJFLe/giphy.gif","Nationals":"https://media.giphy.com/media/l0MYGb1LuZ3n7dRnO/giphy.gif","Orioles":"https://media.giphy.com/media/3o7TKF1fSIs1R19B8k/giphy.gif","Padres":"https://media.giphy.com/media/xT0xeMA62E1XIlqNb2/giphy.gif","Phillies":"https://media.giphy.com/media/3ohzdIuqJoo8QdKlnW/giphy.gif","Pirates":"https://media.giphy.com/media/l0HlvFUHALbTnhPG0/giphy.gif","Rangers":"https://media.giphy.com/media/l3q2Z6S6n38zjPswo/giphy.gif","Rays":"https://media.giphy.com/media/l0HlBO7eyXzSZkJri/giphy.gif","Red Sox":"https://media.giphy.com/media/3ohzdYJK1lnOykJFLe/giphy.gif","Reds":"https://media.giphy.com/media/l0MYGb1LuZ3n7dRnO/giphy.gif","Rockies":"https://media.giphy.com/media/3o7TKF1fSIs1R19B8k/giphy.gif","Royals":"https://media.giphy.com/media/l3q2LH45XElELRzRm/giphy.gif","Tigers":"https://media.giphy.com/media/3oKIPjHCmuXqdSupHi/giphy.gif","Twins":"https://media.giphy.com/media/l0HlvFUHALbTnhPG0/giphy.gif","White Sox":"https://media.giphy.com/media/l3q2Z6S6n38zjPswo/giphy.gif","Yankees":"https://media.giphy.com/media/3ohzdYJK1lnOykJFLe/giphy.gif"};
+var MLB_MAP={"Los Angeles Angels":"Angels","Houston Astros":"Astros","Oakland Athletics":"Athletics","Athletics":"Athletics","Toronto Blue Jays":"Blue Jays","Atlanta Braves":"Braves","Milwaukee Brewers":"Brewers","St. Louis Cardinals":"Cardinals","Chicago Cubs":"Cubs","Arizona Diamondbacks":"Diamondbacks","Los Angeles Dodgers":"Dodgers","San Francisco Giants":"Giants","Cleveland Guardians":"Guardians","Seattle Mariners":"Mariners","Miami Marlins":"Marlins","New York Mets":"Mets","Washington Nationals":"Nationals","Baltimore Orioles":"Orioles","San Diego Padres":"Padres","Philadelphia Phillies":"Phillies","Pittsburgh Pirates":"Pirates","Texas Rangers":"Rangers","Tampa Bay Rays":"Rays","Boston Red Sox":"Red Sox","Cincinnati Reds":"Reds","Colorado Rockies":"Rockies","Kansas City Royals":"Royals","Detroit Tigers":"Tigers","Minnesota Twins":"Twins","Chicago White Sox":"White Sox","New York Yankees":"Yankees"};
+var MILES=[{d:"2026-03-18",l:"Draft Day",i:"\ud83d\udccb"},{d:"2026-03-25",l:"Opening Day",i:"\u26be"},{d:"2026-07-04",l:"Mid-Season Draft",i:"\ud83c\udf86"},{d:"2026-07-14",l:"All-Star Break",i:"\u2b50"},{d:"2026-09-27",l:"Season Ends",i:"\ud83c\udfc1"}];
+function toArr(v){if(!v)return[];if(Array.isArray(v))return v;return Object.values(v)}
+function cPicks(v){if(!v)return[[],[],[],[]];var a=Array.isArray(v)?v:Object.keys(v).sort().map(function(k){return v[k]});while(a.length<4)a.push([]);return a.map(function(x){return toArr(x).filter(function(t){return t!=="_"})})}
+function cMgrs(v){if(!v)return MNAMES.map(function(n){return{name:n,teams:[],wsPick:""}});var a=Array.isArray(v)?v:Object.values(v);return a.map(function(m){return{name:m.name||"",teams:toArr(m.teams).filter(function(x){return x!=="_"}),wsPick:m.wsPick||""}})}
+function cRecs(v){var o={};ALL_TEAMS.forEach(function(t){o[t]=(v&&v[t])?{w:v[t].w||0,l:v[t].l||0}:{w:0,l:0}});return o}
+function cOrd(v){if(!v||v==="none")return null;if(Array.isArray(v))return v;return Object.values(v)}
+function cDM(v){if(!v||v==="none")return[].concat(MNAMES);return Array.isArray(v)?v:Object.values(v)}
+function norm(d){if(!d)d={};return{managers:cMgrs(d.managers),records:cRecs(d.records),draftMode:!!d.draftMode,draftRound:d.draftRound||0,draftPick:d.draftPick||0,draftManagers:cDM(d.draftManagers),draftPicks:cPicks(d.draftPicks),draftOrder:cOrd(d.draftOrder),draftLocked:!!d.draftLocked,namesLocked:!!d.namesLocked,prevRankings:d.prevRankings||null,prevRankingsDate:d.prevRankingsDate||"",midSeasonPicks:d.midSeasonPicks||{},midSeasonLocked:!!d.midSeasonLocked}}
+function defData(){var r={};ALL_TEAMS.forEach(function(t){r[t]={w:0,l:0}});return{managers:MNAMES.map(function(n){return{name:n,teams:["_"],wsPick:""}}),records:r,draftMode:false,draftRound:0,draftPick:0,draftManagers:[].concat(MNAMES),draftPicks:[["_"],["_"],["_"],["_"]],draftOrder:"none",draftLocked:false,namesLocked:false,prevRankings:null,prevRankingsDate:"",midSeasonPicks:{},midSeasonLocked:false}}
+function fetchMLB(cb){
+  var espnMap={"D-backs":"Diamondbacks"};
+  fetch("https://site.api.espn.com/apis/v2/sports/baseball/mlb/standings").then(function(r){if(!r.ok)throw new Error("ESPN fail");return r.json()}).then(function(data){
+    var recs={};if(data&&data.children){data.children.forEach(function(conf){(conf.standings&&conf.standings.entries||[]).forEach(function(entry){var name=(entry.team&&entry.team.shortDisplayName)||"";var mapped=espnMap[name]||name;if(mapped&&ALL_TEAMS.includes(mapped)){var w=0,l=0;(entry.stats||[]).forEach(function(s){if(s.name==="wins")w=parseInt(s.value)||0;if(s.name==="losses")l=parseInt(s.value)||0});recs[mapped]={w:w,l:l}}})})}
+    if(Object.keys(recs).length>0)cb(recs);
+  }).catch(function(){
+    fetch("https://statsapi.mlb.com/api/v1/standings?leagueId=103,104&season=2026&standingsTypes=regularSeason").then(function(r){return r.json()}).then(function(data){var recs={};if(data&&data.records){data.records.forEach(function(div){(div.teamRecords||[]).forEach(function(tr){var n=MLB_MAP[tr.team.name]||tr.team.name;if(ALL_TEAMS.includes(n))recs[n]={w:tr.wins||0,l:tr.losses||0}})})}if(Object.keys(recs).length>0)cb(recs)}).catch(function(){})
+  })
+};
+</script>
+<script type="text/babel">
+function App(){
+  const[S,setS]=React.useState(null);
+  const[tab,setTabS]=React.useState(function(){var h=window.location.hash.replace("#","");return["standings","rosters","draft","matchup","rules","future"].includes(h)?h:"standings"});
+  function setTab(t){setTabS(t);window.location.hash=t}
+  const[editRec,setEditRec]=React.useState(false);
+  const[recPwd,setRecPwd]=React.useState("");
+  const[shareCaption,setShareCaption]=React.useState(null);
+  const recUnlocked=recPwd==="fantasy26";
+  const[anim,setAnim]=React.useState(false);
+  const[shuffled,setShuffled]=React.useState(null);
+  const[live,setLive]=React.useState(false);
+  const[adm,setAdm]=React.useState(false);
+  const[pwd,setPwd]=React.useState("");
+  const[celeb,setCeleb]=React.useState(null);
+  const[notifP,setNotifP]=React.useState(typeof window!=="undefined"&&"Notification"in window?Notification.permission:"na");
+  const[chatMsgs,setChatMsgs]=React.useState([]);
+  const[chatInput,setChatInput]=React.useState("");
+  const[chatName,setChatName]=React.useState("");
+  const[lastSync,setLastSync]=React.useState("");
+  const[syncing,setSyncing]=React.useState(false);
+  const[ticker,setTicker]=React.useState([]);
+  const[signName,setSignName]=React.useState("");
+  const[signEmail,setSignEmail]=React.useState("");
+  const[signLeagues,setSignLeagues]=React.useState([]);
+  const[signSent,setSignSent]=React.useState(false);
+  const[h2hA,setH2hA]=React.useState(0);
+  const[intel,setIntel]=React.useState("proj");
+  const[showAllTeams,setShowAllTeams]=React.useState(false);
+  const[h2hB,setH2hB]=React.useState(1);
+  const[lastLdr,setLastLdr]=React.useState("");
+  const chatRef=React.useRef(null);const skip=React.useRef(false);const prevPC=React.useRef(0);const weekSaved=React.useRef(false);const standingsRef=React.useRef(null);const draftResultsRef=React.useRef(null);
+
+  // Colors
+  var Nv="#1B2A4A",Gv="#C9A84C",LGv="#FFF8E7",LNv="#E8EDF4",GRv="#2E7D32",RDv="#C62828",GYv="#6B7280",MGv="#D1D5DB";
+  var cB="#fff",cBd="#E5E5E5",rA="#FAFAFA",iB="#fff",iBd="#DDD",bgC="#F7F6F3";
+  var isAdm=pwd==="fantasy26";
+
+  function enableNotifs(){if("Notification"in window)Notification.requestPermission().then(function(p){setNotifP(p)})}
+
+  function shareStandings(){if(!standingsRef.current)return;html2canvas(standingsRef.current,{backgroundColor:bgC,scale:2}).then(function(c){c.toBlob(function(b){if(navigator.share&&navigator.canShare&&navigator.canShare({files:[new File([b],"fmtl-standings.png",{type:"image/png"})]}))navigator.share({files:[new File([b],"fmtl-standings.png",{type:"image/png"})],title:"Fantasy MLB TL 2026"});else{var a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="fmtl-standings.png";a.click()}},"image/png")})}
+
+  function shareDraftResults(){if(!draftResultsRef.current)return;if(shareCaption===null)setShareCaption("");setTimeout(function(){html2canvas(draftResultsRef.current,{backgroundColor:bgC,scale:2}).then(function(c){c.toBlob(function(b){if(navigator.share&&navigator.canShare&&navigator.canShare({files:[new File([b],"fmtl-draft.png",{type:"image/png"})]}))navigator.share({files:[new File([b],"fmtl-draft.png",{type:"image/png"})],title:"Fantasy MLB TL Draft"});else{var a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="fmtl-draft.png";a.click()}},"image/png")})},100)}
+
+  // Firebase listener
+  React.useEffect(function(){
+    GAME.on("value",function(snap){
+      if(skip.current){skip.current=false;return}
+      var d=snap.val();
+      if(d){var ns=norm(d);setS(ns);setLive(true);if(ns.draftOrder)setShuffled(ns.draftOrder);
+        var tp=ns.draftPicks.reduce(function(a,b){return a+b.length},0);
+        if(tp>prevPC.current&&prevPC.current>0){
+          var pP=ns.draftPick-1,pR=ns.draftRound;if(pP<0){pP=3;pR--}
+          if(pR>=0&&ns.draftOrder){var b2=ns.draftOrder;var sn2=[0,1,2,3,4,5].map(function(i){return i%2===0?[].concat(b2):[].concat(b2).reverse()});
+            var who=sn2[pR][pP];var pt=(ns.draftPicks[who]||[])[pR]||"";var pn=ns.draftManagers[who]||"Someone";
+            if(pt){var nx="";if(ns.draftRound<6){nx=ns.draftManagers[sn2[ns.draftRound][ns.draftPick]]||""}
+              if("Notification"in window&&Notification.permission==="granted")try{new Notification(pn+" drafted the "+pt,{body:nx?nx+" is on the clock!":"Draft complete!",icon:LOGOS[pt]||""})}catch(e){}
+              setCeleb({team:pt,mgr:pn});setTimeout(function(){setCeleb(null)},4500)}}}
+        prevPC.current=tp
+      }else{GAME.set(defData());setS(norm(defData()));setLive(true)}
+    });return function(){GAME.off()}
+  },[]);
+
+  // Auto MLB standings fetch every 10min during season
+  React.useEffect(function(){
+    if(!S||!S.draftLocked)return;var now=new Date();
+    if(now<new Date("2026-03-25")||now>new Date("2026-09-28"))return;
+    function doF(){setSyncing(true);fetchMLB(function(recs){var has=false;Object.keys(recs).forEach(function(t){if(recs[t].w>0||recs[t].l>0)has=true});if(has){skip.current=true;GAME.child("records").update(recs);setLastSync(new Date().toLocaleTimeString([],{hour:"numeric",minute:"2-digit"}))}setSyncing(false)})}
+    doF();var id=setInterval(doF,600000);return function(){clearInterval(id)}
+  },[S&&S.draftLocked]);
+
+
+  // Chat
+  React.useEffect(function(){var c=DB.ref("chat2");c.orderByChild("ts").limitToLast(50).on("value",function(snap){var d=snap.val();if(d){var m=Object.keys(d).map(function(k){return d[k]}).sort(function(a,b){return a.ts-b.ts});setChatMsgs(m)}else setChatMsgs([])});return function(){c.off()}},[]);
+
+  // Live scores ticker
+  React.useEffect(function(){
+    function fetchScores(){var today=new Date().toISOString().slice(0,10).replace(/-/g,"");fetch("https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard?dates="+today).then(function(r){return r.json()}).then(function(data){if(data&&data.events){var scores=data.events.map(function(ev){var c=ev.competitions&&ev.competitions[0];if(!c)return null;var away=c.competitors.find(function(t){return t.homeAway==="away"});var home=c.competitors.find(function(t){return t.homeAway==="home"});var status=ev.status&&ev.status.type?ev.status.type.shortDetail:"";return{away:away?away.team.shortDisplayName:"",awayScore:away?away.score:"",home:home?home.team.shortDisplayName:"",homeScore:home?home.score:"",status:status}}).filter(Boolean);setTicker(scores)}}).catch(function(){})}
+    fetchScores();var id=setInterval(fetchScores,300000);return function(){clearInterval(id)}
+  },[]);
+
+  // Weekly snapshot + leader change notif
+  React.useEffect(function(){
+    if(!S||!S.draftLocked)return;
+    var mgL=cMgrs(S.managers);var rcs=cRecs(S.records);var mspL=S.midSeasonPicks||{};
+    var r2=[].concat(mgL).map(function(m){var tw=0;(m.teams||[]).forEach(function(t){tw+=(rcs[t]||{w:0}).w});var ms=mspL[m.name];if(ms)tw+=(rcs[ms]||{w:0}).w;return{name:m.name,tw:tw}}).sort(function(a,b){return b.tw-a.tw});
+    if(r2[0]&&r2[0].tw>0&&r2[0].name!==lastLdr&&lastLdr!==""){if("Notification"in window&&Notification.permission==="granted")try{new Notification("New League Leader!",{body:r2[0].name+" has taken first place with "+r2[0].tw+" wins!"})}catch(e){}}
+    if(r2[0]&&r2[0].tw>0)setLastLdr(r2[0].name);
+    if(weekSaved.current)return;var now=new Date();if(now.getDay()!==1)return;
+    var ls=S.prevRankingsDate||"";var td=now.toISOString().slice(0,10);if(ls===td)return;
+    if(r2[0]&&r2[0].tw>0){weekSaved.current=true;var sn={};r2.forEach(function(m,i){sn[m.name]=i+1});GAME.update({prevRankings:sn,prevRankingsDate:td})}
+  },[S&&S.draftLocked,S&&S.records]);
+
+  function push(up){var safe={};Object.keys(up).forEach(function(k){safe[k]=up[k]});if(safe.draftPicks)safe.draftPicks=safe.draftPicks.map(function(a){return a.length===0?["_"]:a});if(safe.managers)safe.managers=safe.managers.map(function(m){return{name:m.name,teams:m.teams.length===0?["_"]:m.teams,wsPick:m.wsPick||""}});if(safe.draftOrder===null)safe.draftOrder="none";skip.current=true;var mg={};if(S)Object.keys(S).forEach(function(k){mg[k]=S[k]});Object.keys(up).forEach(function(k){mg[k]=up[k]});setS(norm(mg));GAME.update(safe)}
+
+  if(!S)return <div style={{background:"#F7F6F3",minHeight:"100vh"}}>
+    <div style={{background:"#1B2A4A",padding:"16px 32px 50px"}}><div style={{color:"#C9A84C",fontSize:11,fontWeight:700,letterSpacing:4,marginBottom:4}}>THE OFFICIAL</div><div style={{height:36,width:400,maxWidth:"80%",background:"#ffffff15",borderRadius:8,animation:"pulse 2s infinite"}}/></div>
+    <div style={{maxWidth:1100,margin:"0 auto",padding:"24px 16px"}}>
+      <div style={{display:"flex",gap:12,marginBottom:24}}>{[1,2,3].map(function(i){return <div key={i} style={{flex:1,height:80,background:"#fff",borderRadius:10,border:"1px solid #E5E5E5",animation:"pulse 2s infinite",animationDelay:i*0.15+"s"}}/> })}</div>
+      <div style={{background:"#fff",borderRadius:12,overflow:"hidden",border:"1px solid #E5E5E5"}}><div style={{background:"#1B2A4A",height:48}}/>{[1,2,3,4].map(function(i){return <div key={i} style={{height:56,borderBottom:"1px solid #F0F0F0",animation:"pulse 2s infinite",animationDelay:i*0.1+"s"}}/>})}</div>
+    </div>
+  </div>;
+
+  var mg=S.managers,rc=S.records,dm=S.draftMode,dr=S.draftRound,dp=S.draftPick,dmg=S.draftManagers,dpk=S.draftPicks,dor=S.draftOrder,dlk=S.draftLocked,nlk=S.namesLocked,prk=S.prevRankings,msp=S.midSeasonPicks||{},msl=S.midSeasonLocked;
+  var base=dor||[0,1,2,3];var snk=[0,1,2,3,4,5].map(function(i){return i%2===0?[].concat(base):[].concat(base).reverse()});
+  var mspM={};if(dor){dor.forEach(function(mI){var n=(mg[mI]&&mg[mI].name)||dmg[mI]||"";if(msp[n])mspM[n]=msp[n]})}else Object.keys(msp).forEach(function(k){mspM[k]=msp[k]});
+
+  function stats(m){var tw=0,tl=0,bt="",bw=-1;var aT=[].concat(m.teams||[]);var ms=mspM[m.name];if(ms&&!aT.includes(ms))aT.push(ms);aT.forEach(function(t){var r=rc[t]||{w:0,l:0};tw+=r.w;tl+=r.l;if(r.w>bw){bw=r.w;bt=t}});return{tw:tw,tl:tl,bt:bt,bw:bw,avg:aT.length>0?tw/aT.length:0,tc:aT.length}}
+  var ranked=[].concat(mg).map(function(m){return Object.assign({},m,{s:stats(m)})}).sort(function(a,b){return b.s.tw-a.s.tw||b.s.bw-a.s.bw});
+  var liveMgrs=dmg.map(function(n,i){return{name:n||MNAMES[i]||"",teams:dpk[i]||[],wsPick:""}});
+  var liveRanked=[].concat(liveMgrs).map(function(m){return Object.assign({},m,{s:stats(m)})}).sort(function(a,b){return b.s.tw-a.s.tw||b.s.bw-a.s.bw});
+  var dR=dm||(dor&&!dlk)?liveRanked:ranked;var dM=dm||(dor&&!dlk)?liveMgrs:mg;
+  var top=dR[0]?dR[0].s.tw:0;
+  var taken=dpk.reduce(function(a,b){return a.concat(b)},[]);
+  if(dlk)mg.forEach(function(m){(m.teams||[]).forEach(function(t){if(t&&!taken.includes(t))taken.push(t)})});
+  Object.values(msp).forEach(function(t){if(t&&!taken.includes(t))taken.push(t)});
+  var avail=ALL_TEAMS.filter(function(t){return!taken.includes(t)});
+  var cur=dr<6?snk[dr][dp]:-1;var named=dmg.every(function(n){return(n||"").trim()!==""});
+
+  function getMv(n,rk){if(!prk)return null;var p=prk[n];if(p===undefined||p===null)return null;if(rk<p)return p-rk;if(rk>p)return-(rk-p);return 0}
+
+  function getBadges(){var bg={};dR.forEach(function(m){bg[m.name]=[]});if(!dlk&&!dor)return bg;var best={w:-1,m:"",t:""},worst={w:9999,m:"",t:""};dR.forEach(function(m){(m.teams||[]).forEach(function(t){var r=rc[t]||{w:0,l:0};if(r.w>best.w){best={w:r.w,m:m.name,t:t}}if(r.w+r.l>0&&r.w<worst.w){worst={w:r.w,m:m.name,t:t}}})});if(best.w>0&&best.m){bg[best.m].push("\ud83c\udfaf Sharpshooter ("+best.t+" "+best.w+"W)");bg[best.m].push("\ud83d\udc8e Diamond Pick")}if(worst.w<9999&&worst.m)bg[worst.m].push("\ud83d\udca9 Stinker ("+worst.t+" "+worst.w+"W)");dR.forEach(function(m){if(m.s.tw>=500)bg[m.name].push("\ud83c\udfd4\ufe0f 500 Club");else if(m.s.tw>=400)bg[m.name].push("\ud83c\udfd4\ufe0f 400 Club");else if(m.s.tw>=300)bg[m.name].push("\ud83c\udfd4\ufe0f 300 Club");else if(m.s.tw>=200)bg[m.name].push("\ud83c\udfd4\ufe0f 200 Club");else if(m.s.tw>=100)bg[m.name].push("\ud83d\udcaf Century Club")});if(dR.length>0&&dR[0].s.tw>0)bg[dR[0].name].push("\ud83d\udd25 Hot Streak");if(dR.length>1&&dR[dR.length-1].s.tw>0)bg[dR[dR.length-1].name].push("\u2744\ufe0f Cold Streak");return bg}
+  var badges=getBadges();
+
+  function tL(n,sz){return <span style={{display:"inline-flex",alignItems:"center",gap:5}}><img src={LOGOS[n]||""} alt="" style={{width:sz||18,height:sz||18,objectFit:"contain"}} onError={function(e){e.target.style.display="none"}}/>{n}{n==="Dodgers"?" \ud83c\udfc6":""}</span>}
+
+  // Projected final standings
+  function getProj(){var ss=new Date("2026-03-25"),now=new Date(),el=Math.max(1,Math.floor((now-ss)/864e5)),td=186,pc=Math.min(1,el/td);if(pc<0.02)return null;return dR.map(function(m){return{name:m.name,cur:m.s.tw,proj:pc>0?Math.round(m.s.tw/pc):0}})}
+
+  // WS Tracker
+  function getWST(){var tr=[];dR.forEach(function(m){var c=[];var aT=[].concat(m.teams||[]);var ms=mspM[m.name];if(ms&&!aT.includes(ms))aT.push(ms);aT.forEach(function(t){var r=rc[t]||{w:0,l:0};var gp=r.w+r.l;if(gp>0){var p=Math.round(r.w*(162/gp));if(p>=85)c.push({t:t,w:r.w,l:r.l,p:p})}});if(c.length>0)tr.push({name:m.name,c:c})});return tr}
+
+  // Weekly Recap - auto-generated from standings data
+  function getRecap(){
+    if(!dlk||!prk)return null;
+    var movers=[];
+    dR.forEach(function(m,i){
+      var prev=prk[m.name];
+      if(prev!==undefined&&prev!==null){
+        var diff=prev-(i+1);
+        if(diff>0)movers.push({name:m.name,type:"up",val:diff});
+        else if(diff<0)movers.push({name:m.name,type:"down",val:Math.abs(diff)});
+      }
+    });
+    // Find hottest and coldest teams by win pct
+    var bestT={t:"",w:0,pct:0},worstT={t:"",w:999,pct:1};
+    ALL_TEAMS.forEach(function(t){
+      var r=rc[t]||{w:0,l:0};var gp=r.w+r.l;
+      if(gp>20){
+        var pct=r.w/gp;
+        if(pct>bestT.pct){bestT={t:t,w:r.w,pct:pct}}
+        if(pct<worstT.pct){worstT={t:t,w:r.w,pct:pct}}
+      }
+    });
+    if(bestT.t===""){ ALL_TEAMS.forEach(function(t){var r=rc[t]||{w:0,l:0};if(r.w>bestT.w)bestT={t:t,w:r.w,pct:0};if(r.w+r.l>0&&r.w<worstT.w)worstT={t:t,w:r.w,pct:0}})}
+    // Biggest weekly gainer - manager who climbed most
+    var bigGain=movers.filter(function(m){return m.type==="up"}).sort(function(a,b){return b.val-a.val})[0]||null;
+    var bigDrop=movers.filter(function(m){return m.type==="down"}).sort(function(a,b){return b.val-a.val})[0]||null;
+    // Tightest race - gap between 1st and 2nd
+    var gap=dR.length>=2?dR[0].s.tw-dR[1].s.tw:0;
+    return{leader:dR[0]?dR[0].name:"",leaderW:dR[0]?dR[0].s.tw:0,movers:movers,bestT:bestT,worstT:worstT,bigGain:bigGain,bigDrop:bigDrop,gap:gap,date:S.prevRankingsDate||""}
+  }
+
+  // Magic Number - wins needed to clinch
+  function getMagic(){
+    if(!dlk||dR.length<2)return null;
+    var ss=new Date("2026-03-25"),now=new Date(),el=Math.max(1,Math.floor((now-ss)/864e5));
+    if(el<93)return null;// Only show after halfway (~93 days)
+    var leader=dR[0],second=dR[1];
+    if(leader.s.tw===0)return null;
+    // Magic number = games remaining for 2nd place projected max - leader current wins + 1
+    var totalDays=186,pctLeft=Math.max(0,1-el/totalDays);
+    var secondProj=second.s.tw+Math.round(second.s.avg*second.s.tc*pctLeft*(162/186));
+    var magic=Math.max(0,secondProj-leader.s.tw+1);
+    if(magic<=0)return{name:leader.name,clinched:true};
+    return{name:leader.name,magic:magic,second:second.name}
+  }
+
+  function doPick(t){if(cur<0||dlk||taken.includes(t))return;var np=dpk.map(function(a){return[].concat(a)});np[cur].push(t);var nP=dp+1,nR=dr;if(nP>=4){nP=0;nR++}var up={draftPicks:np,draftPick:nP,draftRound:nR,namesLocked:true};if(nR>=6){up.managers=mg.map(function(m,i){return{name:dmg[i]||m.name,teams:np[i],wsPick:""}});up.draftLocked=true;up.draftMode=false}push(up);setCeleb({team:t,mgr:dmg[cur]||"Manager"});setTimeout(function(){setCeleb(null)},4500)}
+  function startDraft(){if(dlk)return;push({draftRound:0,draftPick:0,draftPicks:[[],[],[],[]],draftManagers:mg.map(function(m,i){return m.name||MNAMES[i]||""}),namesLocked:false,draftOrder:null,draftMode:true,draftLocked:false});setShuffled(null);setAnim(false);setTab("draft")}
+  function doRandom(){if(dor!==null||!named)return;setAnim(true);var ct=0;var si=setInterval(function(){var t=[0,1,2,3];for(var i=3;i>0;i--){var j=Math.floor(Math.random()*(i+1));var tmp=t[i];t[i]=t[j];t[j]=tmp}setShuffled([].concat(t));ct++;if(ct>=15){clearInterval(si);var f=[0,1,2,3];for(var i=3;i>0;i--){var j=Math.floor(Math.random()*(i+1));var tmp=f[i];f[i]=f[j];f[j]=tmp}setShuffled(f);push({draftOrder:f,namesLocked:true});setTimeout(function(){setAnim(false)},500)}},120)}
+  function undo(){if(!isAdm)return;var pP=dp-1,pR=dr;if(pP<0){pP=3;pR--}if(pR<0)return;var who=snk[pR][pP];var np=dpk.map(function(a){return[].concat(a)});if(!np[who]||np[who].length===0)return;np[who].pop();push({draftPicks:np,draftPick:pP,draftRound:pR})}
+  function saveWeek(){if(!isAdm)return;var sn={};dR.forEach(function(m,i){sn[m.name]=i+1});push({prevRankings:sn,prevRankingsDate:new Date().toISOString().slice(0,10)})}
+  function setDMgr(i,v){if(nlk)return;var nm=[].concat(dmg);nm[i]=v;push({draftManagers:nm})}
+  function setRc(t,f,v){var nr={};ALL_TEAMS.forEach(function(x){nr[x]={w:rc[x].w,l:rc[x].l}});nr[t][f]=parseInt(v)||0;push({records:nr})}
+  function manualSync(){setSyncing(true);fetchMLB(function(recs){var has=false;Object.keys(recs).forEach(function(t){if(recs[t].w>0||recs[t].l>0)has=true});if(has){GAME.child("records").update(recs);setLastSync(new Date().toLocaleTimeString([],{hour:"numeric",minute:"2-digit"}))}setSyncing(false)})}
+
+  function sendChat(){if(!chatInput.trim()||!chatName.trim())return;DB.ref("chat2").push({name:chatName.trim(),msg:chatInput.trim(),ts:Date.now()});setChatInput("");if(chatRef.current)setTimeout(function(){chatRef.current.scrollTop=chatRef.current.scrollHeight},100)}
+
+  function submitSignup(){if(!signName.trim()||!signEmail.trim())return;DB.ref("signups2").push({name:signName.trim(),email:signEmail.trim(),leagues:signLeagues,ts:Date.now()});setSignSent(true)}
+  function toggleLeague(lg){if(signLeagues.includes(lg))setSignLeagues(signLeagues.filter(function(x){return x!==lg}));else setSignLeagues([].concat(signLeagues,[lg]))}
+
+  var tabs=[{id:"standings",l:"Standings"},{id:"rosters",l:"Rosters"},{id:"draft",l:"Draft Room"},{id:"matchup",l:"Matchup"},{id:"rules",l:"Rules"},{id:"future",l:"Future Leagues"}];
+  var PREV={"Ben":600,"Rip":581,"Stranger":575,"Andrew":571};
+  var proj=getProj();var wst=getWST();var recap=getRecap();var magic=getMagic();
+
+  return (
+    <div style={{fontFamily:"'Libre Franklin',sans-serif",background:bgC,minHeight:"100vh"}}>
+      {/* HEADER */}
+      <div className="hdr" style={{background:"linear-gradient(270deg,#1B2A4A,#0F1D36,#1B2A4A,#243656)",backgroundSize:"400% 400%",animation:"headerShift 12s ease infinite",padding:"16px 32px 12px",position:"relative",overflow:"hidden"}}>
+        <div className="hdr-row" style={{display:"flex",justifyContent:"space-between",alignItems:"center",position:"relative"}}>
+          <h1 style={{color:"#fff",fontSize:32,fontWeight:900,margin:0,fontFamily:"'Playfair Display',serif"}}>Fantasy MLB Team League <span style={{color:"#C9A84C"}}>2026</span></h1>
+          <div style={{display:"flex",alignItems:"center",gap:12}}>
+            {(function(){var ss=new Date("2026-03-25"),now=new Date(),day=Math.max(1,Math.floor((now-ss)/864e5)+1);return now>=ss?<div style={{background:"#2E7D3220",border:"1px solid #2E7D3240",borderRadius:20,padding:"5px 14px",display:"flex",alignItems:"center",gap:8}}><span style={{display:"inline-block",width:7,height:7,borderRadius:"50%",background:"#2E7D32",animation:"pulse 1.5s infinite"}}/><span style={{fontSize:10,color:"#4CAF50",fontWeight:700,letterSpacing:1}}>LIVE</span><span style={{fontSize:10,color:"#ffffff60"}}>Day {day}</span></div>:null})()}
+          </div>
+        </div>
+        <div className="tabs-row" style={{display:"flex",gap:0,marginTop:12,borderBottom:"2px solid #C9A84C33"}}>{tabs.map(function(t){return <button key={t.id} onClick={function(){setTab(t.id)}} style={{background:tab===t.id?"#C9A84C":"transparent",color:tab===t.id?"#1B2A4A":"#ffffff99",border:"none",padding:"8px 20px",fontSize:11,fontWeight:700,letterSpacing:1.5,textTransform:"uppercase",borderRadius:"6px 6px 0 0",fontFamily:"'Libre Franklin',sans-serif"}}>{t.l}</button>})}</div>
+      </div>
+
+      {/* LIVE SCORES TICKER */}
+      {ticker.length>0&&<div className="ticker-wrap"><div className="ticker-track">{[].concat(ticker,ticker).map(function(g,i){var isLive=g.status.indexOf("Top")>-1||g.status.indexOf("Bot")>-1||g.status.indexOf("Mid")>-1||g.status.indexOf("End")>-1;return <span key={i} style={{fontSize:11,color:isLive?"#4CAF50":"#ffffff90",fontWeight:isLive?700:400}}>{g.away} <span style={{fontWeight:700,color:"#fff"}}>{g.awayScore}</span>{" - "}<span style={{fontWeight:700,color:"#fff"}}>{g.homeScore}</span> {g.home}<span style={{color:isLive?"#4CAF50":"#ffffff50",fontSize:9,marginLeft:6}}>{g.status}</span></span>})}</div></div>}
+
+      <div style={{maxWidth:1100,margin:"0 auto",padding:"12px 16px"}}>
+        {/* ===== STANDINGS ===== */}
+        {tab==="standings"&&<div>
+          {/* Prize cards */}
+          <div className="prize-row" style={{display:"flex",gap:12,marginBottom:24,flexWrap:"wrap"}}>{[["Reg Season","$150","$50 entry"],["World Series","$75","$25 entry"],["Best Team","\ud83c\udfc6","Bragging Rights"]].map(function(x){return <div key={x[0]} className="glass" style={{flex:1,minWidth:180,borderRadius:10,padding:"16px 20px"}}><div style={{fontSize:11,color:GYv,fontWeight:600,letterSpacing:1,textTransform:"uppercase"}}>{x[0]}</div><div style={{fontSize:28,fontWeight:900,color:Nv,fontFamily:"'Playfair Display',serif",marginTop:4}}>{x[1]}</div><div style={{fontSize:11,color:GYv,marginTop:2}}>{x[2]}</div></div>})}</div>
+
+          {/* Standings Table */}
+          <div style={{background:cB,borderRadius:12,overflow:"hidden",border:"1px solid "+cBd,overflowX:"auto"}} ref={standingsRef}>
+            <div style={{background:"#1B2A4A",padding:"14px 24px 10px"}}>
+              <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:10}}><span style={{color:"#fff",fontSize:14,fontWeight:700}}>LEAGUE STANDINGS</span><div style={{display:"flex",alignItems:"center",gap:10}}><span style={{color:"#C9A84C",fontSize:10}}>{syncing?"Syncing...":lastSync?"Updated "+lastSync:""}</span><button onClick={manualSync} disabled={syncing} style={{background:"#C9A84C",color:"#1B2A4A",border:"none",borderRadius:6,padding:"4px 10px",fontSize:9,fontWeight:700,fontFamily:"'Libre Franklin',sans-serif"}}>{syncing?"...":"SYNC"}</button><button onClick={shareStandings} style={{background:"#ffffff20",color:"#fff",border:"none",borderRadius:6,padding:"4px 10px",fontSize:9,fontWeight:700,fontFamily:"'Libre Franklin',sans-serif"}}>SHARE</button></div></div>
+              {(function(){var ss=new Date("2026-03-25"),se=new Date("2026-09-27"),now=new Date(),td=Math.floor((se-ss)/864e5),el=Math.floor((now-ss)/864e5),pct=Math.max(0,Math.min(100,Math.round(el/td*100))),st=now>=ss;return st?<div><div style={{background:"#ffffff15",borderRadius:10,height:6,overflow:"hidden"}}><div style={{background:"linear-gradient(90deg,#2E7D32,#C9A84C)",height:"100%",borderRadius:10,width:pct+"%",transition:"width .5s"}}/></div><div style={{display:"flex",justifyContent:"space-between",marginTop:4}}><span style={{fontSize:8,color:"#ffffff40"}}>Mar 25</span><span style={{fontSize:8,color:"#C9A84C"}}>{pct}%</span><span style={{fontSize:8,color:"#ffffff40"}}>Sep 27</span></div></div>:null})()}
+            </div>
+            <table className="st-table" style={{width:"100%",borderCollapse:"collapse"}}>
+              <thead><tr style={{background:LNv}}>{["RK","","MANAGER","WINS","GB","AVG W","BEST TEAM"].map(function(h){return <th key={h} style={{padding:"10px 16px",fontSize:h==="WINS"?13:10,fontWeight:h==="WINS"?800:700,color:h==="WINS"?GRv:Nv,letterSpacing:1.5,textAlign:h==="MANAGER"?"left":"center"}}>{h}</th>})}</tr></thead>
+              <tbody>{dR.map(function(m,i){var gb=i===0?"-":(top-m.s.tw);var mv=getMv(m.name,i+1);var mvE=mv===null?"":mv>0?<span className="mu">{"\u25b2"}{mv}</span>:mv<0?<span className="md">{"\u25bc"}{Math.abs(mv)}</span>:<span className="ms">-</span>;
+                return <tr key={m.name||i} className={i===0&&m.s.tw>0?"gold-row":""} style={{background:i===0?LGv:i%2===0?rA:cB}}>
+                  <td style={{padding:"14px 16px",textAlign:"center",fontWeight:800,fontSize:18,color:i===0?Gv:Nv,fontFamily:"'Playfair Display',serif"}}>{i+1}</td>
+                  <td style={{textAlign:"center",padding:"4px 2px"}}>{mvE}</td>
+                  <td style={{padding:"14px 16px",fontWeight:700,fontSize:15,color:Nv}}>{m.name||"-"}{m.name==="Ben"?" \ud83d\udc51":""}</td>
+                  <td style={{textAlign:"center",fontWeight:900,fontSize:24,color:GRv,fontFamily:"'Playfair Display',serif"}}>{m.s.tw}</td>
+                  <td style={{textAlign:"center",color:typeof gb==="number"?RDv:GYv,fontWeight:700,fontSize:15}}>{gb}</td>
+                  <td style={{textAlign:"center",fontSize:13,color:GYv}}>{m.s.avg.toFixed(1)}</td>
+                  <td style={{textAlign:"center",fontSize:13,fontWeight:600,color:Nv}}>{m.s.bt?tL(m.s.bt,16):""}{m.s.bw>0?" ("+m.s.bw+"W)":""}</td>
+                </tr>})}</tbody>
+            </table>
+          </div>
+
+          {/* SEASON INTEL */}
+          {(proj&&proj[0]&&proj[0].cur>0||wst.length>0||recap&&recap.leaderW>0||magic)&&<div style={{marginTop:24,background:cB,borderRadius:12,overflow:"hidden",border:"1px solid "+cBd}}>
+            <div style={{background:"#1B2A4A",padding:"12px 24px",display:"flex",justifyContent:"space-between",alignItems:"center",flexWrap:"wrap",gap:8}}>
+              <span style={{color:"#fff",fontSize:14,fontWeight:700}}>SEASON INTEL</span>
+              <div style={{display:"flex",gap:0}}>
+                {proj&&proj[0]&&proj[0].cur>0&&<button onClick={function(){setIntel("proj")}} style={{background:intel==="proj"?"#C9A84C":"transparent",color:intel==="proj"?"#1B2A4A":"#ffffff80",border:"none",padding:"4px 12px",fontSize:9,fontWeight:700,letterSpacing:1,borderRadius:"4px 0 0 4px",fontFamily:"'Libre Franklin',sans-serif"}}>PROJECTIONS</button>}
+                {wst.length>0&&<button onClick={function(){setIntel("ws")}} style={{background:intel==="ws"?"#C9A84C":"transparent",color:intel==="ws"?"#1B2A4A":"#ffffff80",border:"none",padding:"4px 12px",fontSize:9,fontWeight:700,letterSpacing:1,fontFamily:"'Libre Franklin',sans-serif"}}>WS TRACKER</button>}
+                {recap&&recap.leaderW>0&&<button onClick={function(){setIntel("recap")}} style={{background:intel==="recap"?"#C9A84C":"transparent",color:intel==="recap"?"#1B2A4A":"#ffffff80",border:"none",padding:"4px 12px",fontSize:9,fontWeight:700,letterSpacing:1,borderRadius:"0 4px 4px 0",fontFamily:"'Libre Franklin',sans-serif"}}>RECAP</button>}
+              </div>
+            </div>
+            {/* Magic Number banner */}
+            {magic&&<div style={{background:magic.clinched?"#2E7D3215":"#1B2A4A10",padding:"12px 24px",borderBottom:"1px solid "+cBd,textAlign:"center"}}>
+              {magic.clinched?<div style={{fontSize:13,fontWeight:800,color:GRv}}>{magic.name} has clinched the title!</div>:
+              <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:12}}><span style={{fontSize:11,color:Gv,fontWeight:700,letterSpacing:1}}>MAGIC NUMBER</span><span style={{fontSize:28,fontWeight:900,color:Gv,fontFamily:"'Playfair Display',serif"}}>{magic.magic}</span><span style={{fontSize:11,color:GYv}}>{magic.name} needs {magic.magic} more wins to clinch over {magic.second}</span></div>}
+            </div>}
+            <div style={{padding:"16px 24px"}}>
+              {/* Projections */}
+              {intel==="proj"&&proj&&proj[0]&&proj[0].cur>0&&<div>
+                <div style={{fontSize:10,color:GYv,fontWeight:700,letterSpacing:1.5,marginBottom:12}}>PROJECTED FINAL · Based on current pace</div>
+                <div className="proj-grid" style={{display:"grid",gridTemplateColumns:"repeat(auto-fit, minmax(200px, 1fr))",gap:12}}>
+                  {proj.map(function(p,i){var prev=PREV[p.name]||0;var diff=p.proj-prev;return <div key={p.name} style={{padding:"12px 16px",background:i===0?LGv:rA,borderRadius:8,border:"1px solid "+cBd}}>
+                    <div style={{display:"flex",justifyContent:"space-between"}}><span style={{fontSize:13,fontWeight:700,color:Nv}}>{p.name}</span><span style={{fontSize:9,fontWeight:700,color:GYv}}>#{i+1}</span></div>
+                    <div style={{display:"flex",justifyContent:"space-between",marginTop:8}}>
+                      <div><div style={{fontSize:10,color:GYv}}>Current</div><div style={{fontSize:18,fontWeight:900,color:GRv,fontFamily:"'Playfair Display',serif"}}>{p.cur}</div></div>
+                      <div style={{textAlign:"center",paddingTop:12}}><span style={{fontSize:14,color:Gv}}>\u2192</span></div>
+                      <div style={{textAlign:"right"}}><div style={{fontSize:10,color:GYv}}>Projected</div><div style={{fontSize:18,fontWeight:900,color:Nv,fontFamily:"'Playfair Display',serif"}}>{p.proj}</div></div>
+                    </div>
+                    {prev>0&&p.proj>0&&<div style={{marginTop:8,paddingTop:8,borderTop:"1px solid "+cBd,display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+                      <span style={{fontSize:10,color:GYv}}>vs 2025 ({prev}W)</span>
+                      <span style={{fontSize:11,fontWeight:700,color:diff>0?GRv:diff<0?RDv:GYv}}>{diff>0?"+":""}{diff} wins</span>
+                    </div>}
+                  </div>})}
+                </div>
+              </div>}
+              {/* WS Tracker */}
+              {intel==="ws"&&wst.length>0&&<div>
+                <div style={{fontSize:10,color:GYv,fontWeight:700,letterSpacing:1.5,marginBottom:12}}>TEAMS ON 85+ WIN PACE</div>
+                <div className="wst-grid" style={{display:"grid",gridTemplateColumns:"repeat(auto-fit, minmax(220px, 1fr))",gap:12}}>
+                  {wst.map(function(w){return <div key={w.name} style={{padding:"12px 16px",background:rA,borderRadius:8,border:"1px solid "+cBd}}>
+                    <div style={{fontSize:13,fontWeight:700,color:Nv,marginBottom:8}}>{w.name}</div>
+                    {w.c.map(function(c){return <div key={c.t} style={{display:"flex",justifyContent:"space-between",marginBottom:4}}><span style={{fontSize:12,color:Nv}}>{tL(c.t,14)}</span><span style={{fontSize:11,fontWeight:700,color:c.p>=90?GRv:Gv}}>{c.w}W \u00b7 {c.p} pace</span></div>})}
+                  </div>})}
+                </div>
+              </div>}
+              {/* Recap */}
+              {intel==="recap"&&recap&&recap.leaderW>0&&<div>
+                <div className="recap-row" style={{display:"flex",gap:16,flexWrap:"wrap",marginBottom:16}}>
+                  <div style={{flex:1,minWidth:140,padding:"12px 16px",background:LGv,borderRadius:8,border:"1px solid "+Gv+"40"}}><div style={{fontSize:10,color:GYv,fontWeight:700,letterSpacing:1.5,marginBottom:4}}>LEADER</div><div style={{fontSize:16,fontWeight:800,color:Nv}}>{recap.leader}</div><div style={{fontSize:12,color:GRv,fontWeight:700}}>{recap.leaderW}W</div></div>
+                  <div style={{flex:1,minWidth:140,padding:"12px 16px",background:rA,borderRadius:8,border:"1px solid "+cBd}}><div style={{fontSize:10,color:GYv,fontWeight:700,letterSpacing:1.5,marginBottom:4}}>GAP</div><div style={{fontSize:22,fontWeight:900,color:recap.gap<=5?RDv:recap.gap<=15?Gv:GRv,fontFamily:"'Playfair Display',serif"}}>{recap.gap}</div><div style={{fontSize:10,color:GYv}}>{recap.gap<=5?"Neck and neck":recap.gap<=15?"Competitive":"Comfortable lead"}</div></div>
+                  {recap.bestT.t&&<div style={{flex:1,minWidth:140,padding:"12px 16px",background:GRv+"10",borderRadius:8,border:"1px solid "+GRv+"30"}}><div style={{fontSize:10,color:GRv,fontWeight:700,letterSpacing:1.5,marginBottom:4}}>HOTTEST</div><div style={{fontSize:13,fontWeight:700,color:Nv}}>{tL(recap.bestT.t,16)}</div><div style={{fontSize:11,color:GRv,fontWeight:600}}>{recap.bestT.w}W</div></div>}
+                  {recap.worstT.t&&recap.worstT.w<999&&<div style={{flex:1,minWidth:140,padding:"12px 16px",background:RDv+"10",borderRadius:8,border:"1px solid "+RDv+"30"}}><div style={{fontSize:10,color:RDv,fontWeight:700,letterSpacing:1.5,marginBottom:4}}>COLDEST</div><div style={{fontSize:13,fontWeight:700,color:Nv}}>{tL(recap.worstT.t,16)}</div><div style={{fontSize:11,color:RDv,fontWeight:600}}>{recap.worstT.w}W</div></div>}
+                </div>
+                {recap.movers.length>0&&<div style={{display:"flex",gap:6,flexWrap:"wrap"}}>{recap.movers.map(function(mv){return <span key={mv.name} style={{padding:"4px 10px",borderRadius:6,background:mv.type==="up"?GRv+"12":RDv+"12",fontSize:11,fontWeight:700,color:mv.type==="up"?GRv:RDv}}>{mv.type==="up"?"\u25b2":"\u25bc"}{mv.val} {mv.name}</span>})}</div>}
+              </div>}
+            </div>
+          </div>}
+
+          {/* Badges */}
+          {dlk&&dR.some(function(m){return(badges[m.name]||[]).length>0})&&<div style={{marginTop:24,background:cB,borderRadius:12,overflow:"hidden",border:"1px solid "+cBd}}>
+            <div style={{background:"#1B2A4A",padding:"14px 24px"}}><span style={{color:"#fff",fontSize:14,fontWeight:700}}>MILESTONE BADGES</span></div>
+            <div className="badge-grid" style={{padding:"16px 24px",display:"grid",gridTemplateColumns:"repeat(auto-fit, minmax(220px, 1fr))",gap:16}}>
+              {dR.map(function(m,i){var mb=badges[m.name]||[];if(!mb.length)return null;return <div key={m.name} style={{padding:"12px 16px",background:i===0?LGv:rA,borderRadius:8,border:"1px solid "+cBd}}><div style={{fontSize:13,fontWeight:700,color:Nv,marginBottom:8}}>{m.name}</div>{mb.map(function(b,bi){return <div key={bi} style={{fontSize:12,color:GYv,marginBottom:4}}>{b}</div>})}</div>})}
+            </div>
+          </div>}
+
+        </div>}
+
+        {/* ===== ROSTERS ===== */}
+        {tab==="rosters"&&<div className="roster-grid" style={{display:"grid",gridTemplateColumns:"repeat(auto-fit, minmax(240px, 1fr))",gap:16}}>
+          {dR.map(function(m,mi){var mColor=MGR_COLORS[m.name]||"#6B7280";return <div key={m.name||mi} style={{background:cB,borderRadius:10,overflow:"hidden",border:"1px solid "+cBd,borderTop:"3px solid "+mColor}}>
+            <div style={{background:"#1B2A4A",padding:"14px 18px",display:"flex",justifyContent:"space-between",alignItems:"center"}}><span style={{color:"#fff",fontWeight:700,fontSize:15}}>{m.name||"-"}{m.name==="Ben"?" \ud83d\udc51":""}</span><span style={{color:"#C9A84C",fontWeight:900,fontSize:22,fontFamily:"'Playfair Display',serif"}}>{m.s.tw}<span style={{fontSize:11,fontWeight:600,marginLeft:2}}>W</span></span></div>
+            {(badges[m.name]||[]).length>0&&<div style={{padding:"6px 14px",background:LGv,borderBottom:"1px solid "+cBd,display:"flex",flexWrap:"wrap",gap:8}}>{(badges[m.name]||[]).map(function(b,bi){return <span key={bi} style={{fontSize:10,color:Nv,fontWeight:600}}>{b}</span>})}</div>}
+            <table style={{width:"100%",borderCollapse:"collapse"}}><thead><tr style={{background:LNv}}><th style={{padding:"8px 14px",fontSize:10,fontWeight:700,color:Nv,textAlign:"left"}}>TEAM</th><th style={{padding:"8px 10px",fontSize:12,fontWeight:800,color:GRv,textAlign:"center"}}>WINS</th></tr></thead>
+              <tbody>{(function(){var aT=[].concat(m.teams||[]);var ms=mspM[m.name];if(ms&&!aT.includes(ms))aT.push(ms);return aT.sort(function(a,b){return(rc[b]?rc[b].w:0)-(rc[a]?rc[a].w:0)}).map(function(t,ti){var r=rc[t]||{w:0,l:0};var iM=ms===t;var gp=r.w+r.l;var pace=gp>10?Math.round(r.w*(162/gp)):0;var tc=TEAM_COLORS[t]||"transparent";return <tr key={t} style={{background:ti%2===0?rA:cB,borderLeft:"3px solid "+tc}}><td style={{padding:"10px 14px",fontSize:13,color:Nv}}>{tL(t,18)}{iM?<span style={{fontSize:8,color:Gv,fontWeight:700,marginLeft:6}}>MID-SEASON</span>:""}</td><td style={{textAlign:"center"}}><span style={{fontSize:17,fontWeight:800,color:GRv}}>{r.w}</span>{pace>0&&<div style={{fontSize:9,color:GYv,marginTop:1}}>{pace} pace</div>}</td></tr>})})()}</tbody>
+              <tfoot><tr style={{background:LGv}}><td style={{padding:"10px 14px",fontWeight:700,fontSize:12,color:Nv}}>TOTAL WINS</td><td style={{textAlign:"center",fontWeight:900,fontSize:20,color:GRv,fontFamily:"'Playfair Display',serif"}}>{m.s.tw}</td></tr></tfoot></table>
+          </div>})}
+          {/* All Teams toggle */}
+          <div style={{marginTop:24}}>
+            <button onClick={function(){setShowAllTeams(!showAllTeams)}} style={{width:"100%",background:"#1B2A4A",color:"#fff",border:"none",borderRadius:8,padding:"12px 24px",fontSize:12,fontWeight:700,letterSpacing:1,fontFamily:"'Libre Franklin',sans-serif",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+              <span>ALL MLB TEAMS BY DIVISION</span>
+              <span style={{fontSize:14}}>{showAllTeams?"\u25b2":"\u25bc"}</span>
+            </button>
+            {showAllTeams&&<div style={{marginTop:12}}>
+              <div style={{display:"flex",justifyContent:"flex-end",alignItems:"center",gap:8,marginBottom:8}}>
+                {!recUnlocked&&!editRec?<input type="password" placeholder="Admin password" value={recPwd} onChange={function(e){setRecPwd(e.target.value)}} style={{padding:"5px 8px",border:"1px solid "+iBd,borderRadius:4,fontSize:10,width:110,background:iB,color:Nv}}/>:null}
+                {recUnlocked?<button onClick={function(){setEditRec(!editRec)}} style={{background:editRec?GRv:"#1B2A4A",color:"#fff",border:"none",padding:"6px 14px",fontSize:10,fontWeight:700,borderRadius:4}}>{editRec?"Done":"Edit"}</button>:null}
+              </div>
+              <div className="division-grid" style={{display:"grid",gridTemplateColumns:"repeat(auto-fit, minmax(300px, 1fr))",gap:12}}>
+                {[{n:"AL East",t:["Yankees","Red Sox","Blue Jays","Orioles","Rays"]},{n:"AL Central",t:["Guardians","Tigers","Twins","Royals","White Sox"]},{n:"AL West",t:["Astros","Mariners","Rangers","Angels","Athletics"]},{n:"NL East",t:["Mets","Braves","Phillies","Nationals","Marlins"]},{n:"NL Central",t:["Cubs","Brewers","Cardinals","Pirates","Reds"]},{n:"NL West",t:["Dodgers","Padres","Diamondbacks","Giants","Rockies"]}].map(function(div){
+                  return <div key={div.n} style={{background:cB,borderRadius:10,overflow:"hidden",border:"1px solid "+cBd}}>
+                    <div style={{background:"#1B2A4A",padding:"8px 14px",display:"flex",justifyContent:"space-between"}}><span style={{color:"#fff",fontSize:11,fontWeight:700}}>{div.n}</span><span style={{color:"#C9A84C",fontSize:9}}>{div.n.startsWith("AL")?"American":"National"}</span></div>
+                    <table style={{width:"100%",borderCollapse:"collapse"}}><thead><tr style={{background:LNv}}><th style={{padding:"6px 10px",fontSize:9,fontWeight:700,color:Nv,textAlign:"left"}}>TEAM</th><th style={{padding:"6px",fontSize:9,fontWeight:800,color:GRv,textAlign:"center"}}>W</th><th style={{padding:"6px",fontSize:9,color:GYv,textAlign:"center"}}>L</th><th style={{padding:"6px 10px",fontSize:9,fontWeight:700,color:Nv,textAlign:"left"}}>MGR</th></tr></thead>
+                      <tbody>{[].concat(div.t).sort(function(a,b){return(rc[b]?rc[b].w:0)-(rc[a]?rc[a].w:0)}).map(function(t,i){var r=rc[t]||{w:0,l:0};var ow="-";dM.forEach(function(m){if((m.teams||[]).includes(t))ow=m.name});if(ow==="-")Object.keys(msp).forEach(function(k){if(msp[k]===t)ow=k});
+                        return <tr key={t} style={{background:i%2===0?rA:cB}}><td style={{padding:"6px 10px",fontWeight:600,fontSize:11,color:Nv}}>{tL(t,14)}</td>
+                          <td style={{textAlign:"center",padding:"6px 4px"}}>{editRec?<input type="number" value={r.w} onChange={function(e){setRc(t,"w",e.target.value)}} style={{width:40,textAlign:"center",border:"2px solid "+GRv,borderRadius:3,padding:2,fontSize:11,fontWeight:800,color:GRv,background:iB}}/>:<span style={{fontWeight:800,color:GRv,fontSize:12}}>{r.w}</span>}</td>
+                          <td style={{textAlign:"center",padding:"6px 4px"}}>{editRec?<input type="number" value={r.l} onChange={function(e){setRc(t,"l",e.target.value)}} style={{width:36,textAlign:"center",border:"1px solid "+iBd,borderRadius:3,padding:2,fontSize:9,color:GYv,background:iB}}/>:<span style={{color:GYv,fontSize:9}}>{r.l}</span>}</td>
+                          <td style={{padding:"6px 10px",fontSize:10,color:ow==="-"?GYv:Gv,fontWeight:600}}>{ow}</td></tr>})}</tbody></table></div>})}
+              </div>
+            </div>}
+          </div>
+        </div>}
+
+        {/* ===== DRAFT ===== */}
+        {tab==="draft"&&<div>
+          <div style={{display:"flex",justifyContent:"flex-end",marginBottom:8}}>
+            {!adm?<button onClick={function(){setAdm(true)}} style={{background:cB,border:"1px solid "+cBd,borderRadius:6,padding:"8px 14px",fontSize:11,color:GYv,fontFamily:"'Libre Franklin',sans-serif"}}>Admin</button>:
+            <div style={{display:"flex",alignItems:"center",gap:10,padding:"10px 16px",background:cB,borderRadius:8,border:"1px solid "+RDv}}>
+              <span style={{fontSize:11,fontWeight:700,color:RDv}}>ADMIN</span>
+              {!isAdm?<input type="password" placeholder="Password" value={pwd} onChange={function(e){setPwd(e.target.value)}} style={{padding:"6px 10px",border:"1px solid "+iBd,borderRadius:6,fontSize:12,width:120,fontFamily:"'Libre Franklin',sans-serif",background:iB,color:Nv}}/>:
+              <div style={{display:"flex",gap:6}}><button onClick={undo} style={{background:RDv,color:"#fff",border:"none",borderRadius:6,padding:"8px 16px",fontSize:12,fontWeight:700,fontFamily:"'Libre Franklin',sans-serif"}}>UNDO PICK</button><button onClick={saveWeek} style={{background:"#1B2A4A",color:"#fff",border:"none",borderRadius:6,padding:"8px 16px",fontSize:12,fontWeight:700,fontFamily:"'Libre Franklin',sans-serif"}}>SAVE WEEK</button></div>}
+              <button onClick={function(){setAdm(false);setPwd("")}} style={{background:"transparent",border:"none",fontSize:14,color:GYv}}>x</button>
+            </div>}
+          </div>
+          <div className="draft-layout" style={{display:"flex",gap:12,alignItems:"stretch"}}>
+            <div style={{flex:1,minWidth:0}}>
+          {!dm&&!dlk?<div style={{textAlign:"center",padding:40}}><div style={{fontSize:18,fontWeight:700,color:Nv,marginBottom:12}}>Ready to draft for 2026?</div><div style={{fontSize:15,fontWeight:700,color:Gv,marginBottom:8}}>DRAFT DAY: March 18, 2026</div><div style={{fontSize:13,color:GYv,marginBottom:24}}>Snake format - 6 rounds - 4 managers - 24 picks<br/><span style={{fontSize:11,color:Gv}}>+ Mid-Season Draft on July 4th (1 pick each)</span></div><button onClick={startDraft} style={{background:Gv,color:"#1B2A4A",border:"none",padding:"14px 36px",fontSize:14,fontWeight:800,borderRadius:8,fontFamily:"'Libre Franklin',sans-serif"}}>START DRAFT</button></div>
+          :dlk?<div>
+            {/* Locked draft results */}
+            <div ref={draftResultsRef} style={{background:cB,borderRadius:10,overflow:"hidden",border:"1px solid "+cBd}}>
+              <div style={{background:"#1B2A4A",padding:"10px 20px",display:"flex",justifyContent:"space-between",alignItems:"center"}}><div style={{display:"flex",alignItems:"center",gap:10}}><span style={{color:"#fff",fontSize:13,fontWeight:700}}>2026 DRAFT RESULTS</span><span style={{background:RDv,color:"#fff",padding:"2px 8px",borderRadius:10,fontSize:9,fontWeight:700}}>LOCKED</span></div><span style={{color:"#C9A84C",fontSize:10}}>Snake Draft - 6 Rounds</span></div>
+              {dor&&<table style={{width:"100%",borderCollapse:"collapse"}}><thead><tr style={{background:LNv}}><th style={{padding:"8px",fontSize:9,fontWeight:700,color:Nv,width:36}}>RD</th>{dor.map(function(mI,pos){return <th key={pos} style={{padding:"8px 12px",fontSize:11,fontWeight:700,color:Nv}}>{mg[mI]?mg[mI].name:dmg[mI]||"Mgr "+(mI+1)}<div style={{fontSize:8,color:Gv,marginTop:1}}>Pick #{pos+1}</div></th>})}</tr></thead>
+                <tbody>{(function(){var bd={};dor.forEach(function(mI){var ts=(mg[mI]&&mg[mI].teams)||dpk[mI]||[];var pk=dpk[mI]||[];bd[mI]=pk.length>=ts.length?pk:ts});return[0,1,2,3,4,5].map(function(rd){return <tr key={rd} style={{background:rd%2===0?rA:cB}}><td style={{textAlign:"center",fontWeight:800,color:Nv,fontSize:12,padding:8,background:LNv}}>{rd+1}</td>{dor.map(function(mI,col){var tp=(bd[mI]||[])[rd]||"";return <td key={col} style={{padding:"8px 10px",textAlign:"center",fontSize:12,fontWeight:600,color:tp?Nv:GYv}}>{tp?tL(tp,14):"-"}</td>})}</tr>})})()}</tbody></table>}
+              <div style={{padding:"10px 20px",background:LGv,display:"flex",justifyContent:"space-between",flexWrap:"wrap",gap:6}}><span style={{fontSize:11,color:Nv,fontWeight:600}}>Remaining: {avail.join(", ")||"None"}</span><span style={{fontSize:11,color:GYv}}>Draft Day: March 18 | Mid-Season Draft: July 4</span></div>
+            </div>
+            <div style={{marginTop:12,display:"flex",gap:8,alignItems:"center",flexWrap:"wrap"}}><input value={shareCaption===null?"":shareCaption} onChange={function(e){setShareCaption(e.target.value)}} placeholder="Add a caption..." style={{flex:1,padding:"8px 12px",border:"1px solid "+iBd,borderRadius:6,fontSize:12,fontFamily:"'Libre Franklin',sans-serif",minWidth:200,background:iB,color:Nv}}/><button onClick={shareDraftResults} style={{background:Gv,color:"#1B2A4A",border:"none",borderRadius:6,padding:"8px 20px",fontSize:11,fontWeight:700,fontFamily:"'Libre Franklin',sans-serif"}}>SHARE DRAFT</button></div>
+
+            {/* Mid-Season Draft */}
+            <div style={{marginTop:24,background:cB,borderRadius:12,overflow:"hidden",border:"1px solid "+cBd}}>
+              <div style={{background:"#1B2A4A",padding:"14px 20px",display:"flex",justifyContent:"space-between",alignItems:"center"}}><div style={{display:"flex",alignItems:"center",gap:10}}><span style={{color:"#fff",fontSize:13,fontWeight:700}}>MID-SEASON DRAFT</span><span style={{background:msl?GRv:Gv,color:msl?"#fff":"#1B2A4A",padding:"2px 8px",borderRadius:10,fontSize:9,fontWeight:700}}>{msl?"LOCKED":"JULY 4, 2026"}</span></div><span style={{color:"#C9A84C",fontSize:10}}>Round 7 - 1 Pick Each</span></div>
+              <div style={{padding:"16px 20px"}}>
+                <div style={{fontSize:12,color:GYv,marginBottom:16}}>Each manager selects 1 team from the remaining pool. 2 teams will remain undrafted.</div>
+                {(function(){var mN=dor?dor.map(function(mI){return(mg[mI]&&mg[mI].name)||dmg[mI]||"Mgr "+(mI+1)}):dmg;var mA=ALL_TEAMS.filter(function(t){var inD=dpk.reduce(function(a,b){return a.concat(b)},[]).includes(t);var inM=false;mg.forEach(function(m){if((m.teams||[]).includes(t))inM=true});var inMid=Object.values(msp).includes(t);return!inD&&!inM&&!inMid});
+                return <div><div className="mid-table"><table style={{width:"100%",borderCollapse:"collapse",marginBottom:12}}><thead><tr style={{background:LNv}}><th style={{padding:"8px 14px",fontSize:10,fontWeight:700,color:Nv,textAlign:"left"}}>MANAGER</th><th style={{padding:"8px 14px",fontSize:10,fontWeight:700,color:Nv,textAlign:"left"}}>MID-SEASON PICK</th>{isAdm&&!msl&&<th style={{padding:"8px 14px",fontSize:10,fontWeight:700,color:Nv,textAlign:"center"}}>ACTION</th>}</tr></thead>
+                  <tbody>{mN.map(function(name,i){var pick=msp[name]||"";return <tr key={name} style={{background:i%2===0?rA:cB}}><td style={{padding:"10px 14px",fontSize:13,fontWeight:700,color:Nv}}>{name}</td><td style={{padding:"10px 14px",fontSize:13,color:pick?Nv:GYv}}>{pick?tL(pick,16):"\u2014"}</td>
+                    {isAdm&&!msl&&<td style={{padding:"10px 14px",textAlign:"center"}}>{pick?<button onClick={function(){var np=Object.assign({},msp);delete np[name];var nM=mg.map(function(m){if(m.name===name)return{name:m.name,teams:(m.teams||[]).filter(function(t){return t!==pick}),wsPick:m.wsPick||""};return m});push({managers:nM,midSeasonPicks:np})}} style={{background:RDv,color:"#fff",border:"none",borderRadius:4,padding:"4px 10px",fontSize:10,fontWeight:700}}>REMOVE</button>:
+                    <select onChange={function(e){if(!e.target.value)return;var np=Object.assign({},msp);np[name]=e.target.value;var nM=mg.map(function(m){if(m.name===name){var nt=[].concat(m.teams||[]);if(!nt.includes(e.target.value))nt.push(e.target.value);return{name:m.name,teams:nt,wsPick:m.wsPick||""}}return m});push({managers:nM,midSeasonPicks:np})}} value="" style={{padding:"4px 8px",border:"1px solid "+iBd,borderRadius:4,fontSize:11,background:iB,color:Nv}}><option value="">Select team...</option>{mA.map(function(t){return <option key={t} value={t}>{t}</option>})}</select>}</td>}</tr>})}</tbody></table></div>
+                  {isAdm&&!msl&&Object.keys(msp).length===4&&<button onClick={function(){if(!confirm("Lock mid-season draft? This is final."))return;push({midSeasonLocked:true})}} style={{background:GRv,color:"#fff",border:"none",borderRadius:6,padding:"10px 24px",fontSize:12,fontWeight:700,width:"100%"}}>LOCK MID-SEASON DRAFT</button>}
+                  {mA.length>0&&<div style={{marginTop:12,fontSize:11,color:GYv}}>Remaining pool: {mA.join(", ")}</div>}
+                  {msl&&<div style={{marginTop:8,fontSize:11,color:GRv,fontWeight:700}}>Mid-Season Draft locked. All picks final.</div>}
+                </div>})()}
+              </div>
+            </div>
+          </div>
+          :<div>
+            {/* Active draft */}
+            <div className="draft-mgr-grid" style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:8,marginBottom:12}}>{dmg.map(function(name,i){return <div key={i}><div style={{fontSize:9,fontWeight:700,color:GYv,letterSpacing:1,marginBottom:3}}>MGR {i+1}</div><input value={name||""} onChange={function(e){setDMgr(i,e.target.value)}} placeholder={"Manager "+(i+1)} disabled={nlk} style={{width:"100%",padding:"8px 10px",border:cur===i&&dor?"2px solid "+Gv:"1px solid "+iBd,borderRadius:6,fontSize:13,fontWeight:600,color:Nv,boxSizing:"border-box",background:nlk?"#F3F3F3":(cur===i&&dor?LGv:iB),fontFamily:"'Libre Franklin',sans-serif",opacity:nlk?0.8:1}}/></div>})}</div>
+            {!dor&&<div style={{textAlign:"center",padding:32,background:cB,borderRadius:12,border:"1px solid "+cBd,marginBottom:20}}>
+              {shuffled?<div style={{marginBottom:24}}><div style={{fontSize:11,fontWeight:700,color:GYv,letterSpacing:2,marginBottom:16}}>{anim?"RANDOMIZING...":"DRAFT ORDER SET"}</div><div style={{display:"flex",justifyContent:"center",gap:16,flexWrap:"wrap"}}>{shuffled.map(function(mI,pos){return <div key={pos} style={{background:anim?"#1B2A4A10":"#1B2A4A",borderRadius:10,padding:"16px 20px",minWidth:100,border:"2px solid "+(anim?Gv+"50":Gv)}}><div style={{fontSize:28,fontWeight:900,color:anim?"#1B2A4A":Gv,fontFamily:"'Playfair Display',serif"}}>#{pos+1}</div><div style={{fontSize:13,fontWeight:700,marginTop:4,color:anim?GYv:"#fff"}}>{dmg[mI]||"Mgr "+(mI+1)}</div></div>})}</div></div>:
+              <div><div style={{fontSize:22,marginBottom:8}}>{"\ud83c\udfb2"}</div><div style={{fontSize:16,fontWeight:700,color:Nv,marginBottom:4}}>Draft Order Randomizer</div><div style={{fontSize:12,color:GYv,marginBottom:20}}>Enter all 4 manager names, then click below.<br/><span style={{fontWeight:700,color:RDv}}>One time only - result is final.</span></div></div>}
+              <button onClick={doRandom} disabled={anim||!named} style={{background:named&&!anim?Gv:MGv,color:named?"#1B2A4A":"#999",border:"none",padding:"14px 40px",fontSize:14,fontWeight:800,borderRadius:8,cursor:named&&!anim?"pointer":"not-allowed",fontFamily:"'Libre Franklin',sans-serif"}}>{anim?"RANDOMIZING...":shuffled?"ORDER LOCKED":"RANDOMIZE DRAFT ORDER"}</button>
+              {!named&&!shuffled&&<div style={{fontSize:11,color:RDv,marginTop:8}}>Enter all 4 manager names first</div>}
+            </div>}
+            {dor&&<div style={{background:"#1B2A4A",borderRadius:8,padding:"10px 20px",marginBottom:10,display:"flex",justifyContent:"center",alignItems:"center",gap:20,flexWrap:"wrap"}}><span style={{fontSize:11,fontWeight:700,color:"#C9A84C",letterSpacing:2}}>DRAFT ORDER</span>{dor.map(function(mI,pos){return <div key={pos} style={{display:"flex",alignItems:"center",gap:6}}><span style={{fontSize:16,fontWeight:900,color:"#C9A84C",fontFamily:"'Playfair Display',serif"}}>{pos+1}.</span><span style={{fontSize:13,fontWeight:600,color:"#fff"}}>{dmg[mI]}</span></div>})}<span style={{fontSize:10,color:"#ffffff50"}}>LOCKED</span></div>}
+            {dor&&dr<6&&<div style={{background:LGv,borderRadius:6,padding:"8px 16px",marginBottom:10,border:"1px solid "+Gv+"60",display:"flex",justifyContent:"space-between",alignItems:"center",flexWrap:"wrap",gap:6}}><div><span style={{fontWeight:800,color:Nv,fontSize:13}}>Round {dr+1}</span><span style={{color:GYv,margin:"0 6px"}}>-</span><span style={{fontWeight:600,color:Gv,fontSize:13}}>{dmg[cur]||"Mgr "+(cur+1)} is on the clock</span></div><span style={{fontSize:11,color:GYv}}>Pick #{dr*4+dp+1} of 24</span></div>}
+            {dor&&<div style={{background:cB,borderRadius:10,overflow:"hidden",border:"1px solid "+cBd,marginBottom:12,overflowX:"auto"}}><table style={{width:"100%",borderCollapse:"collapse",minWidth:480}}><thead><tr style={{background:"#1B2A4A"}}><th style={{padding:"8px",color:"#fff",fontSize:9,fontWeight:700,width:36}}>RD</th>{dor.map(function(mI,pos){return <th key={pos} style={{padding:"8px 12px",color:"#fff",fontSize:11,fontWeight:700}}>{dmg[mI]||"Mgr "+(mI+1)}<div style={{fontSize:8,color:"#C9A84C",marginTop:1}}>#{pos+1}</div></th>})}</tr></thead><tbody>{[0,1,2,3,4,5].map(function(rd){return <tr key={rd} style={{background:rd%2===0?rA:cB}}><td style={{textAlign:"center",fontWeight:800,color:Nv,fontSize:12,padding:8,background:LNv}}>{rd+1}</td>{dor.map(function(mI,col){var tp=(dpk[mI]||[])[rd]||"";var ic=dr===rd&&cur===mI&&!tp;return <td key={col} style={{padding:"8px 10px",textAlign:"center",fontSize:12,fontWeight:tp?600:400,color:tp?Nv:GYv,background:ic?Gv+"25":"inherit",border:ic?"2px solid "+Gv:"none"}}>{tp?tL(tp,14):(ic?"...":"-")}</td>})}</tr>})}</tbody></table></div>}
+            {dor&&dr<6&&<div><div style={{fontSize:10,fontWeight:700,color:Nv,letterSpacing:1.5,marginBottom:8}}>AVAILABLE ({avail.length})</div><div style={{display:"flex",flexWrap:"wrap",gap:6}}>{avail.map(function(t){return <button key={t} onClick={function(){doPick(t)}} style={{background:cB,border:"1px solid "+cBd,borderRadius:6,padding:"6px 12px",fontSize:12,fontWeight:500,color:Nv,fontFamily:"'Libre Franklin',sans-serif"}} onMouseEnter={function(e){e.currentTarget.style.background=LGv;e.currentTarget.style.borderColor=Gv}} onMouseLeave={function(e){e.currentTarget.style.background=cB;e.currentTarget.style.borderColor=cBd}}>{tL(t,14)}</button>})}</div></div>}
+            {dr>=6&&<div style={{textAlign:"center",padding:20,background:LGv,borderRadius:10,border:"1px solid "+Gv}}><div style={{fontSize:24,marginBottom:4}}>{"\ud83c\udf89"}</div><div style={{fontSize:16,fontWeight:800,color:Nv}}>Main Draft Complete - 6 Rounds Locked!</div><div style={{fontSize:13,color:GYv,marginTop:4}}>All picks are final.</div><div style={{marginTop:8,fontSize:12,color:GYv}}>Remaining: {avail.join(", ")||"None"}</div><div style={{marginTop:12,padding:"12px 16px",background:"#1B2A4A",borderRadius:8}}><div style={{fontSize:11,color:"#C9A84C",fontWeight:700,letterSpacing:2}}>MID-SEASON DRAFT - JULY 4TH</div><div style={{fontSize:12,color:"#fff",marginTop:4}}>Round 7 - 1 pick per manager from remaining teams.</div></div></div>}
+          </div>}
+            </div>
+            {/* Chat sidebar */}
+            <div className="draft-sidebar" style={{width:260,minWidth:260,display:"flex",flexDirection:"column"}}><div style={{background:cB,borderRadius:12,overflow:"hidden",border:"1px solid "+cBd,display:"flex",flexDirection:"column",flex:1}}><div style={{background:"#1B2A4A",padding:"8px 14px",display:"flex",justifyContent:"space-between"}}><span style={{color:"#fff",fontSize:11,fontWeight:700}}>TRASH TALK</span><span style={{color:"#C9A84C",fontSize:9}}>{chatMsgs.length} msgs</span></div><div ref={chatRef} style={{flex:1,overflowY:"auto",padding:"8px 10px",background:rA,minHeight:200}}>{chatMsgs.length===0&&<div style={{textAlign:"center",padding:30,color:GYv,fontSize:11}}>No messages yet. Start the trash talk!</div>}{chatMsgs.map(function(m,i){var t=new Date(m.ts);return <div key={i} style={{marginBottom:10}}><div style={{display:"flex",alignItems:"baseline",gap:6}}><span style={{fontSize:12,fontWeight:700,color:Nv}}>{m.name}</span><span style={{fontSize:8,color:GYv}}>{t.toLocaleTimeString([],{hour:"numeric",minute:"2-digit"})}</span></div><div style={{fontSize:12,color:GYv,marginTop:1}}>{m.msg}</div></div>})}</div><div style={{padding:"8px 10px",borderTop:"1px solid "+cBd}}>{!chatName.trim()?<input value={chatName} onChange={function(e){setChatName(e.target.value)}} placeholder="Your name" style={{width:"100%",padding:"8px 10px",border:"1px solid "+iBd,borderRadius:6,fontSize:11,background:iB,color:Nv}}/>:<div><div style={{fontSize:9,fontWeight:700,color:Gv,marginBottom:4}}>{chatName}</div><div style={{display:"flex",gap:6}}><input value={chatInput} onChange={function(e){setChatInput(e.target.value)}} onKeyDown={function(e){if(e.key==="Enter")sendChat()}} placeholder="Talk trash..." style={{flex:1,padding:"8px 10px",border:"1px solid "+iBd,borderRadius:6,fontSize:11,background:iB,color:Nv}}/><button onClick={sendChat} style={{background:Gv,color:"#1B2A4A",border:"none",borderRadius:6,padding:"8px 12px",fontSize:10,fontWeight:700}}>SEND</button></div></div>}</div></div></div>
+          </div>
+        </div>}
+
+        {/* ===== HEAD TO HEAD ===== */}
+        {tab==="matchup"&&<div>
+          <div style={{background:cB,borderRadius:12,overflow:"hidden",border:"1px solid "+cBd}}><div style={{background:"#1B2A4A",padding:"14px 24px"}}><span style={{color:"#fff",fontSize:14,fontWeight:700}}>HEAD-TO-HEAD MATCHUP</span></div>
+            <div style={{padding:"20px 24px"}}>
+              <div style={{display:"flex",gap:16,marginBottom:24,alignItems:"center",justifyContent:"center",flexWrap:"wrap"}}>
+                <select value={h2hA} onChange={function(e){setH2hA(parseInt(e.target.value))}} style={{padding:"10px 16px",border:"2px solid "+Gv,borderRadius:8,fontSize:14,fontWeight:700,background:iB,color:Nv}}>{dR.map(function(m,i){return <option key={i} value={i}>{m.name}</option>})}</select>
+                <span style={{fontSize:20,fontWeight:900,color:Gv,fontFamily:"'Playfair Display',serif"}}>VS</span>
+                <select value={h2hB} onChange={function(e){setH2hB(parseInt(e.target.value))}} style={{padding:"10px 16px",border:"2px solid "+Gv,borderRadius:8,fontSize:14,fontWeight:700,background:iB,color:Nv}}>{dR.map(function(m,i){return <option key={i} value={i}>{m.name}</option>})}</select>
+              </div>
+              {(function(){var a=dR[h2hA],b=dR[h2hB];if(!a||!b)return null;var aW=a.s.tw>b.s.tw,bW=b.s.tw>a.s.tw,tie=a.s.tw===b.s.tw;
+                function mTeams(m){var aT=[].concat(m.teams||[]);var ms=mspM[m.name];if(ms&&!aT.includes(ms))aT.push(ms);return aT.sort(function(x,y){return(rc[y]?rc[y].w:0)-(rc[x]?rc[x].w:0)})}
+                return <div className="h2h-wrap" style={{display:"grid",gridTemplateColumns:"1fr auto 1fr",gap:24}}>
+                  <div style={{textAlign:"center",padding:20,background:aW?GRv+"15":rA,borderRadius:12,border:"1px solid "+(aW?GRv:cBd)}}>
+                    <div style={{fontSize:18,fontWeight:800,color:Nv}}>{a.name}</div>
+                    <div style={{fontSize:48,fontWeight:900,color:aW?GRv:Nv,fontFamily:"'Playfair Display',serif",margin:"12px 0"}}>{a.s.tw}</div><div style={{fontSize:11,color:GYv}}>TOTAL WINS</div>
+                    <div style={{marginTop:16}}>{mTeams(a).map(function(t){var r=rc[t]||{w:0,l:0};return <div key={t} style={{display:"flex",justifyContent:"space-between",padding:"4px 0",fontSize:12,color:Nv}}><span>{tL(t,14)}</span><span style={{fontWeight:700,color:GRv}}>{r.w}W</span></div>})}</div>
+                  </div>
+                  <div style={{display:"flex",flexDirection:"column",justifyContent:"center",alignItems:"center",padding:"20px 0"}}><div style={{fontSize:11,color:GYv,fontWeight:700,letterSpacing:2,marginBottom:8}}>DIFF</div><div style={{fontSize:32,fontWeight:900,color:tie?Gv:(aW?GRv:RDv),fontFamily:"'Playfair Display',serif"}}>{tie?"TIE":"+"}{Math.abs(a.s.tw-b.s.tw)}</div><div style={{fontSize:11,color:GYv,marginTop:4}}>{tie?"Tied":(aW?a.name:b.name)+" leads"}</div></div>
+                  <div style={{textAlign:"center",padding:20,background:bW?GRv+"15":rA,borderRadius:12,border:"1px solid "+(bW?GRv:cBd)}}>
+                    <div style={{fontSize:18,fontWeight:800,color:Nv}}>{b.name}</div>
+                    <div style={{fontSize:48,fontWeight:900,color:bW?GRv:Nv,fontFamily:"'Playfair Display',serif",margin:"12px 0"}}>{b.s.tw}</div><div style={{fontSize:11,color:GYv}}>TOTAL WINS</div>
+                    <div style={{marginTop:16}}>{mTeams(b).map(function(t){var r=rc[t]||{w:0,l:0};return <div key={t} style={{display:"flex",justifyContent:"space-between",padding:"4px 0",fontSize:12,color:Nv}}><span>{tL(t,14)}</span><span style={{fontWeight:700,color:GRv}}>{r.w}W</span></div>})}</div>
+                  </div>
+                </div>})()}
+            </div>
+          </div>
+        </div>}
+
+        {/* ===== RULES ===== */}
+        {tab==="rules"&&<div>
+          <div style={{background:cB,borderRadius:12,overflow:"hidden",border:"1px solid "+cBd,marginBottom:24}}><div style={{background:"#1B2A4A",padding:"14px 24px"}}><span style={{color:"#fff",fontSize:14,fontWeight:700}}>FANTASY MLB TEAM LEAGUE - OFFICIAL RULES</span></div>
+            <div style={{padding:"24px"}}><div style={{fontSize:18,fontWeight:900,color:Nv,fontFamily:"'Playfair Display',serif",marginBottom:16}}>WINS ARE ALL THAT MATTER</div>
+              {[{t:"THE GAME",i:["Fantasy MLB Team League is a season-long fantasy game where 4 managers draft MLB teams and compete based on total regular season wins.","The manager whose 7 teams accumulate the most combined wins by the end of the MLB regular season is crowned champion."]},{t:"THE DRAFT",i:["Snake draft format - 6 rounds on Draft Day, 4 managers.","24 of 30 MLB teams are drafted in the main draft.","Draft order is determined by a one-time randomizer on draft night.","Round 1 follows the randomized order (1-2-3-4). Round 2 reverses (4-3-2-1). This alternates through all 6 rounds.","Once a team is drafted, the pick is final and locked.","Draft Day 2026: March 18, 2026.","MID-SEASON DRAFT: A 7th round (1 pick per manager) takes place on July 4, 2026. Each manager picks from the remaining 6 teams. Those teams are added to rosters mid-season. 2 teams will remain undrafted."]},{t:"SCORING",i:["Only regular season WINS count. Losses, PCT, and postseason results do not affect standings.","Each manager's team wins are totaled throughout the season (6 teams pre-July 4, 7 teams after mid-season draft).","Standings update automatically via the MLB Stats API."]},{t:"TIEBREAKER",i:["In the event of a tie in total wins, the manager whose single best team has the most wins is declared the winner."]},{t:"ENTRY & PRIZES",i:["Entry fee: $75 per manager ($50 regular season + $25 World Series pick).","Total prize pool: $225.","Regular Season Champion: $150","World Series Pick Winner: $75","Best Single Team: Bragging Rights"]},{t:"WORLD SERIES PICK",i:["The manager who rosters the team that wins the 2026 World Series wins this portion of the game.","This is a separate $25 entry with a $75 payout.","If the World Series winner is not on any manager's roster, entries are returned and all contestants are forever banned from future participation."]},{t:"2025 CHAMPION",i:["Ben - 600 total wins","Runner-up: Rip - 581 wins","Margin of victory: 19 wins"]}].map(function(s){return <div key={s.t} style={{marginBottom:20}}><div style={{fontSize:12,fontWeight:800,color:Gv,letterSpacing:2,marginBottom:8,textTransform:"uppercase"}}>{s.t}</div>{s.i.map(function(it,i){return <div key={i} style={{fontSize:13,color:GYv,lineHeight:1.8,paddingLeft:12,marginBottom:4}}><span style={{color:Nv,marginRight:6}}>{">"}</span>{it}</div>})}</div>})}</div></div>
+          {/* 2025 Results */}
+          <div style={{marginTop:24,background:cB,borderRadius:12,overflow:"hidden",border:"1px solid "+cBd}}>
+            <div style={{background:"#1B2A4A",padding:"14px 24px",display:"flex",justifyContent:"space-between"}}><span style={{color:"#fff",fontSize:14,fontWeight:700}}>2025 SEASON RESULTS</span><span style={{color:"#C9A84C",fontSize:11}}>FINAL STANDINGS</span></div>
+            <div className="prev-table"><table style={{width:"100%",borderCollapse:"collapse"}}><thead><tr style={{background:LNv}}>{["RK","MANAGER","WINS","BEST TEAM","ROSTER"].map(function(h){return <th key={h} style={{padding:"10px 16px",fontSize:10,fontWeight:700,color:Nv,letterSpacing:1.5,textAlign:h==="MANAGER"||h==="ROSTER"?"left":"center"}}>{h}</th>})}</tr></thead>
+              <tbody>{[{rk:1,n:"Ben",w:600,b:"Blue Jays (94W)",t:"Blue Jays 94, Yankees 94, Cubs 92, Mariners 90, Mets 83, Giants 81, Nationals 66"},{rk:2,n:"Rip",w:581,b:"Dodgers (93W)",t:"Dodgers 93, Red Sox 89, Tigers 87, Diamondbacks 80, Marlins 79, Rays 77, Athletics 76"},{rk:3,n:"Stranger",w:575,b:"Brewers (97W)",t:"Brewers 97, Padres 90, Astros 87, Royals 82, Braves 76, Angels 72, Pirates 71"},{rk:4,n:"Andrew",w:571,b:"Phillies (96W)",t:"Phillies 96, Guardians 88, Reds 83, Rangers 81, Cardinals 78, Orioles 75, Twins 70"}].map(function(m){return <tr key={m.rk} style={{background:m.rk===1?LGv:m.rk%2===0?rA:cB}}><td style={{padding:"12px 16px",textAlign:"center",fontWeight:800,fontSize:18,color:m.rk===1?Gv:Nv,fontFamily:"'Playfair Display',serif"}}>{m.rk}</td><td style={{padding:"12px 16px",fontWeight:700,fontSize:15,color:Nv}}>{m.n}{m.rk===1?" \ud83c\udfc6":""}</td><td style={{textAlign:"center",fontWeight:900,fontSize:20,color:GRv,fontFamily:"'Playfair Display',serif"}}>{m.w}</td><td style={{textAlign:"center",fontSize:12,fontWeight:600,color:Nv}}>{m.b}</td><td style={{padding:"12px 16px",fontSize:11,color:GYv}}>{m.t}</td></tr>})}</tbody></table>
+            <div style={{padding:"12px 24px",background:LNv,display:"flex",justifyContent:"space-between",flexWrap:"wrap",gap:8}}><span style={{fontSize:11,color:Nv,fontWeight:600}}>Undrafted: White Sox (60W), Rockies (43W)</span><span style={{fontSize:11,color:GYv}}>Margin of Victory: 19 wins</span></div></div>
+          </div>
+
+          <div style={{background:"#1B2A4A",borderRadius:12,padding:"32px 24px",textAlign:"center"}}><div style={{fontSize:11,color:"#C9A84C",fontWeight:700,letterSpacing:3,marginBottom:8}}>SUPPORT THE LEAGUE</div><div style={{fontSize:20,fontWeight:900,color:"#fff",fontFamily:"'Playfair Display',serif",marginBottom:8}}>Help Keep This Growing</div><div style={{fontSize:12,color:"#ffffff80",marginBottom:20}}>Fantasy MLB Team League is built with love. Support the commissioner and help keep it running. Suggested donation: $1</div><a href="https://venmo.com/michaelrippe?txn=pay&amount=1&note=Fantasy%20MLB%20Team%20League%20Support" target="_blank" rel="noopener noreferrer" style={{display:"inline-flex",alignItems:"center",gap:8,background:"#008CFF",color:"#fff",textDecoration:"none",padding:"12px 32px",borderRadius:24,fontSize:14,fontWeight:700}}><svg width="18" height="18" viewBox="0 0 24 24" fill="#fff"><path d="M19.5 3.5c.8 1.1 1.2 2.3 1.2 3.8 0 4.7-4 10.8-7.2 15.1H6.8L4 3.8l5.4-.5 1.6 12.8c1.5-2.4 3.3-6.2 3.3-8.8 0-1.3-.2-2.2-.6-3l5.8-.8z"/></svg>Support via Venmo - $1</a><div style={{fontSize:10,color:"#ffffff40",marginTop:12}}>@michaelrippe</div></div>
+        </div>}
+
+        {/* ===== FUTURE LEAGUES ===== */}
+        {tab==="future"&&<div>
+          {/* Hero */}
+          <div style={{background:"#1B2A4A",borderRadius:12,padding:"40px 24px",textAlign:"center",marginBottom:24}}>
+            <div style={{fontSize:11,color:"#C9A84C",fontWeight:700,letterSpacing:4,marginBottom:8}}>COMING SOON</div>
+            <div style={{fontSize:28,fontWeight:900,color:"#fff",fontFamily:"'Playfair Display',serif",marginBottom:8}}>Fantasy Team League is Expanding</div>
+            <div style={{fontSize:14,color:"#ffffff80",maxWidth:500,margin:"0 auto"}}>The same draft-and-compete format you love — coming to more sports. Sign up for early access and league invites.</div>
+          </div>
+
+          {/* League Cards */}
+          <div className="future-grid" style={{display:"grid",gridTemplateColumns:"repeat(auto-fit, minmax(150px, 1fr))",gap:16,marginBottom:24}}>
+            {[
+              {name:"MLB",logo:"https://a.espncdn.com/combiner/i?img=/i/teamlogos/leagues/500/mlb.png&w=100",status:"ACTIVE",color:GRv,teams:30,perMgr:"6-7",active:true},
+              {name:"NFL",logo:"https://a.espncdn.com/combiner/i?img=/i/teamlogos/leagues/500/nfl.png&w=100",status:"FALL 2026",color:Gv,teams:32,perMgr:"8"},
+              {name:"NBA",logo:"https://a.espncdn.com/combiner/i?img=/i/teamlogos/leagues/500/nba.png&w=100",status:"FALL 2026",color:Gv,teams:30,perMgr:"7-8"},
+              {name:"World Cup",logo:"https://upload.wikimedia.org/wikipedia/en/thumb/e/e3/2026_FIFA_World_Cup.svg/200px-2026_FIFA_World_Cup.svg.png",status:"SUMMER 2026",color:Gv,teams:48,perMgr:"12"},
+              {name:"NHL",logo:"https://a.espncdn.com/combiner/i?img=/i/teamlogos/leagues/500/nhl.png&w=100",status:"2027",color:GYv,teams:32,perMgr:"8"}
+            ].map(function(lg){
+              var sel=signLeagues.includes(lg.name);
+              return <div key={lg.name} onClick={function(){if(!lg.active)toggleLeague(lg.name)}} style={{
+                background:cB,borderRadius:12,padding:"20px 16px",textAlign:"center",
+                border:sel?"2px solid "+Gv:"1px solid "+cBd,cursor:lg.active?"default":"pointer",
+                transition:"all 0.15s",opacity:lg.active?0.7:1
+              }}>
+                <img src={lg.logo} alt={lg.name} style={{width:50,height:50,objectFit:"contain",marginBottom:8}} onError={function(e){e.target.style.display="none"}}/>
+                <div style={{fontSize:14,fontWeight:800,color:Nv}}>{lg.name}</div>
+                <div style={{fontSize:10,fontWeight:700,color:lg.color,letterSpacing:1,marginTop:4}}>{lg.status}</div>
+                <div style={{fontSize:9,color:GYv,marginTop:4}}>{lg.teams} teams · {lg.perMgr} per manager</div>
+                {!lg.active&&<div style={{fontSize:9,color:sel?GRv:GYv,marginTop:4,fontWeight:sel?700:400}}>{sel?"SELECTED":"Click to select"}</div>}
+              </div>
+            })}
+          </div>
+
+          {/* How It Works */}
+          <div style={{background:cB,borderRadius:12,overflow:"hidden",border:"1px solid "+cBd,marginBottom:24}}>
+            <div style={{background:"#1B2A4A",padding:"14px 24px"}}><span style={{color:"#fff",fontSize:14,fontWeight:700}}>HOW IT WORKS</span></div>
+            <div style={{padding:"24px",display:"grid",gridTemplateColumns:"repeat(auto-fit, minmax(200px, 1fr))",gap:24}}>
+              {[
+                {step:"1",icon:"\ud83c\udfb2",title:"Draft Teams",desc:"Snake draft format. Each manager drafts real teams. No players, no lineups — just pick the teams you believe in."},
+                {step:"2",icon:"\ud83d\udcca",title:"Track Wins",desc:"Standings auto-update all season. Your teams' real-world wins are your score. Most combined wins at the end takes the pot."},
+                {step:"3",icon:"\ud83c\udfc6",title:"Win Cash",desc:"Entry fees fund the prize pool. Regular season champ and World Series pick winner split the money."}
+              ].map(function(s){return <div key={s.step} style={{textAlign:"center"}}>
+                <div style={{width:48,height:48,borderRadius:"50%",background:LGv,border:"2px solid "+Gv,display:"flex",alignItems:"center",justifyContent:"center",margin:"0 auto 12px",fontSize:22}}>{s.icon}</div>
+                <div style={{fontSize:13,fontWeight:800,color:Nv,marginBottom:6}}>{s.title}</div>
+                <div style={{fontSize:12,color:GYv,lineHeight:1.6}}>{s.desc}</div>
+              </div>})}
+            </div>
+          </div>
+
+          {/* Sign Up Form */}
+          <div style={{background:cB,borderRadius:12,overflow:"hidden",border:"1px solid "+cBd,marginBottom:24}}>
+            <div style={{background:"#1B2A4A",padding:"14px 24px"}}><span style={{color:"#fff",fontSize:14,fontWeight:700}}>GET EARLY ACCESS</span></div>
+            {signSent?
+              <div style={{padding:"40px 24px",textAlign:"center"}}>
+                <div style={{fontSize:32,marginBottom:12}}>{"\u2705"}</div>
+                <div style={{fontSize:18,fontWeight:800,color:Nv,fontFamily:"'Playfair Display',serif",marginBottom:8}}>You're on the list!</div>
+                <div style={{fontSize:13,color:GYv}}>We'll reach out when new leagues open up.</div>
+                {signLeagues.length>0&&<div style={{fontSize:12,color:Gv,fontWeight:600,marginTop:8}}>Interested in: {signLeagues.join(", ")}</div>}
+              </div>:
+              <div style={{padding:"24px"}}>
+                <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:16,marginBottom:16}}>
+                  <div>
+                    <div style={{fontSize:11,fontWeight:700,color:Nv,letterSpacing:1,marginBottom:6}}>YOUR NAME</div>
+                    <input value={signName} onChange={function(e){setSignName(e.target.value)}} placeholder="Full name" style={{width:"100%",padding:"12px 14px",border:"1px solid "+iBd,borderRadius:8,fontSize:14,color:Nv,background:iB,boxSizing:"border-box"}}/>
+                  </div>
+                  <div>
+                    <div style={{fontSize:11,fontWeight:700,color:Nv,letterSpacing:1,marginBottom:6}}>EMAIL</div>
+                    <input value={signEmail} onChange={function(e){setSignEmail(e.target.value)}} placeholder="your@email.com" type="email" style={{width:"100%",padding:"12px 14px",border:"1px solid "+iBd,borderRadius:8,fontSize:14,color:Nv,background:iB,boxSizing:"border-box"}}/>
+                  </div>
+                </div>
+                <div style={{marginBottom:20}}>
+                  <div style={{fontSize:11,fontWeight:700,color:Nv,letterSpacing:1,marginBottom:8}}>WHICH LEAGUES INTEREST YOU?</div>
+                  <div style={{display:"flex",flexWrap:"wrap",gap:8}}>
+                    {["NFL","NBA","NHL","World Cup"].map(function(lg){
+                      var sel=signLeagues.includes(lg);
+                      return <button key={lg} onClick={function(){toggleLeague(lg)}} style={{
+                        background:sel?"#1B2A4A":cB,color:sel?"#fff":Nv,
+                        border:"1px solid "+(sel?"#1B2A4A":cBd),borderRadius:20,padding:"8px 18px",
+                        fontSize:12,fontWeight:600
+                      }}>{sel?"\u2713 ":""}{lg}</button>
+                    })}
+                  </div>
+                </div>
+                <button onClick={submitSignup} disabled={!signName.trim()||!signEmail.trim()} style={{
+                  width:"100%",background:signName.trim()&&signEmail.trim()?Gv:MGv,
+                  color:signName.trim()&&signEmail.trim()?"#1B2A4A":"#999",
+                  border:"none",borderRadius:8,padding:"14px",fontSize:14,fontWeight:800,
+                  cursor:signName.trim()&&signEmail.trim()?"pointer":"not-allowed"
+                }}>SIGN UP FOR EARLY ACCESS</button>
+                <div style={{fontSize:10,color:GYv,textAlign:"center",marginTop:8}}>No spam. League invites and updates only.</div>
+              </div>}
+          </div>
+
+          {/* What to Expect */}
+          <div style={{background:cB,borderRadius:12,overflow:"hidden",border:"1px solid "+cBd,marginBottom:24}}>
+            <div style={{background:"#1B2A4A",padding:"14px 24px"}}><span style={{color:"#fff",fontSize:14,fontWeight:700}}>WHAT TO EXPECT</span></div>
+            <div style={{padding:"24px"}}>
+              {[
+                {emoji:"\ud83c\udfc8",title:"NFL Team League",desc:"Draft 8 NFL teams. Most combined regular season wins takes the pot. 17-week season of pure strategy. Launching Fall 2026."},
+                {emoji:"\ud83c\udfc0",title:"NBA Team League",desc:"Draft 7-8 NBA teams. 82 games of drama. Total wins decide the champion. Launching Fall 2026."},
+                {emoji:"\u26bd",title:"World Cup Team League",desc:"Draft 12 national teams for the 2026 FIFA World Cup. Points-based scoring through the tournament. Summer 2026."},
+                {emoji:"\ud83c\udfd2",title:"NHL Team League",desc:"Draft 8 NHL teams. Same wins-based format adapted for hockey. Target: 2027 season."}
+              ].map(function(item){return <div key={item.title} style={{display:"flex",gap:16,marginBottom:20,alignItems:"flex-start"}}>
+                <div style={{fontSize:28,flexShrink:0}}>{item.emoji}</div>
+                <div>
+                  <div style={{fontSize:14,fontWeight:700,color:Nv,marginBottom:4}}>{item.title}</div>
+                  <div style={{fontSize:12,color:GYv,lineHeight:1.6}}>{item.desc}</div>
+                </div>
+              </div>})}
+            </div>
+          </div>
+
+          {/* FAQ */}
+          <div style={{background:cB,borderRadius:12,overflow:"hidden",border:"1px solid "+cBd,marginBottom:24}}>
+            <div style={{background:"#1B2A4A",padding:"14px 24px"}}><span style={{color:"#fff",fontSize:14,fontWeight:700}}>FREQUENTLY ASKED QUESTIONS</span></div>
+            <div style={{padding:"24px"}}>
+              {[
+                {q:"How much does it cost?",a:"Entry fees vary by league but typically $50-$75 per person. All entry fees go directly into the prize pool — zero rake."},
+                {q:"How many people per league?",a:"4 managers per league keeps it competitive and ensures every team on your roster matters. We may expand to 6 or 8 for larger sports."},
+                {q:"Do I need to know anything about the sport?",a:"Nope. That's the beauty of Team League — you're drafting entire teams, not individual players. Pick the teams you believe in and let the season play out."},
+                {q:"When do leagues start?",a:"NFL and NBA leagues launch Fall 2026. World Cup runs Summer 2026. Sign up above and we'll notify you when registration opens."}
+              ].map(function(faq){return <div key={faq.q} style={{marginBottom:20,paddingBottom:20,borderBottom:"1px solid "+cBd}}>
+                <div style={{fontSize:13,fontWeight:700,color:Nv,marginBottom:6}}>{faq.q}</div>
+                <div style={{fontSize:12,color:GYv,lineHeight:1.7}}>{faq.a}</div>
+              </div>})}
+            </div>
+          </div>
+
+          {/* Social Proof */}
+          <div style={{padding:"20px 24px",background:LGv,borderRadius:12,border:"1px solid "+Gv+"40",textAlign:"center"}}>
+            <div style={{fontSize:13,fontWeight:700,color:Nv}}>Fantasy Team League - Est. 2015</div>
+            <div style={{fontSize:12,color:GYv,marginTop:4}}>11 seasons strong · Join the next chapter</div>
+          </div>
+        </div>}
+
+      </div>
+
+      {/* Celebration overlay */}
+      {celeb&&<div style={{position:"fixed",top:0,left:0,width:"100%",height:"100%",zIndex:9999,display:"flex",justifyContent:"center",alignItems:"center",background:"rgba(27,42,74,0.85)",animation:"fadeIn 0.3s ease"}} onClick={function(){setCeleb(null)}}><div style={{background:"#fff",borderRadius:16,padding:"32px 48px",textAlign:"center",maxWidth:420,animation:"celebBounce 0.5s ease"}} className="celeb-pad"><img src={LOGOS[celeb.team]||""} alt="" style={{width:100,height:100,objectFit:"contain",marginBottom:16}} onError={function(e){e.target.style.display="none"}}/><div style={{fontSize:12,color:"#6B7280",fontWeight:700,letterSpacing:2,textTransform:"uppercase",marginBottom:4}}>DRAFTED BY {(celeb.mgr||"").toUpperCase()}</div><div style={{fontSize:28,fontWeight:900,color:"#1B2A4A",fontFamily:"'Playfair Display',serif",marginBottom:16}} className="celeb-title">The {celeb.team}!</div><img src={GIFS[celeb.team]||""} alt="" style={{width:"100%",maxWidth:300,borderRadius:10,marginBottom:12}} onError={function(e){e.target.style.display="none"}}/><div style={{fontSize:10,color:"#CCC",marginTop:4}}>Click anywhere to dismiss</div></div></div>}
+
+      <div style={{textAlign:"center",padding:"12px 0 16px",fontSize:10,color:GYv}}>Fantasy MLB Team League 2026 · $225 Prize Pool · Est. 2025</div>
+    </div>
+  );
+}
+ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
+</script>
+</body>
+</html>
